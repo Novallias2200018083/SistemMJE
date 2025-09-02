@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\LotteryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ExportController as AdminExportController;
 use App\Http\Controllers\Admin\ExportController;
+use App\Http\Controllers\Admin\TenanController;
 
 // --- Tenant Controllers ---
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
@@ -107,6 +108,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         // TAMBAHKAN ROUTE INI
         Route::get('/attendance/day/{day}', 'attendanceByDay')->name('attendance.by_day');
     });
+
+    // Rute untuk Manajemen Tenan
+    Route::resource('/tenan', TenanController::class);
+
+    Route::get('/export/tenants/complete', [ExportController::class, 'completeTenants'])
+        ->name('export.tenants.complete');
+
+
 });
 
 
