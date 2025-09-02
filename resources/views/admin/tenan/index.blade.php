@@ -17,25 +17,26 @@
     </div>
 
     <!-- Statistik Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white p-6 rounded-lg shadow-sm">
-            <p class="text-gray-500 text-sm">Total Tenan</p>
-            <p class="text-3xl font-bold text-gray-800">{{ number_format($totalTenants) }}</p>
+    <div class="flex justify-center mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 w-full max-w-4xl">
+            <div class="bg-white p-10 rounded-2xl shadow-sm text-center">
+                <p class="text-gray-500 text-lg">Total Tenan</p>
+                <p class="text-5xl font-bold text-gray-800">{{ number_format($totalTenants) }}</p>
+            </div>
+            <div class="bg-white p-10 rounded-2xl shadow-sm text-center">
+                <p class="text-gray-500 text-lg">Total Penjualan</p>
+                <p class="text-5xl font-bold text-gray-800">Rp {{ number_format($totalSales) }}</p>
+            </div>
         </div>
-        <div class="bg-white p-6 rounded-lg shadow-sm">
-            <p class="text-gray-500 text-sm">Total Penjualan</p>
-            <p class="text-3xl font-bold text-gray-800">Rp {{ number_format($totalSales) }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-sm">
+        {{-- <div class="bg-white p-6 rounded-lg shadow-sm">
             <p class="text-gray-500 text-sm">Target Hari 1</p>
             <p class="text-3xl font-bold text-gray-800">Rp {{ number_format($targetDay1) }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-sm">
             <p class="text-gray-500 text-sm">Target Hari 2 & 3</p>
             <p class="text-3xl font-bold text-gray-800">Rp {{ number_format($targetDay2 + $targetDay3) }}</p>
-        </div>
+        </div> --}}
     </div>
-
 
     <!-- Konten Utama dengan Tabs -->
     <div class="bg-white p-6 rounded-lg shadow-sm">

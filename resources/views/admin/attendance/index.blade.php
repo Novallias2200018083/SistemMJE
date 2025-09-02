@@ -31,8 +31,11 @@
     <div class="bg-white p-6 rounded-lg shadow-sm">
         <div class="border-b border-gray-200 mb-6">
             <nav class="-mb-px flex space-x-6" id="tabs">
+                <a href="#absen-scan"
+                    class="tab-link py-2 px-1 border-b-2 border-teal-500 font-semibold text-teal-600">Scan QR</a>
                 <a href="#absen-manual"
-                    class="tab-link py-2 px-1 border-b-2 border-teal-500 font-semibold text-teal-600">Absen Manual</a>
+                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Absen
+                    Manual</a>
                 <a href="#absen-massal"
                     class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Absen
                     Massal</a>
@@ -85,6 +88,123 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Scan barcode --}}
+            <div id="absen-scan" class="tab-content">
+                <h3 class="font-bold text-lg mb-2">Input Presensi dengan Scan</h3>
+                <p class="text-gray-500 mb-4">Pilih hari event lalu gunakan kamera untuk scan QR code peserta.</p>
+
+                <div class="p-4 border rounded-lg">
+                    <!-- Pilih Hari Event -->
+                    <div class="mb-4">
+                        <label for="scan-day-select" class="text-sm font-medium">Hari Event</label>
+                        <select id="scan-day-select"
+                            class="mt-1 w-full border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500">
+                            <option value="">-- Pilih Hari --</option>
+                            <option value="1">Hari 1</option>
+                            <option value="2">Hari 2</option>
+                            <option value="3">Hari 3</option>
+                        </select>
+                    </div>
+
+                    <!-- Tombol kontrol -->
+                    <div class="flex items-center space-x-3 mb-4">
+                        <button id="start-scan" class="px-4 py-2 bg-sky-600 text-white rounded-lg">Mulai Scan</button>
+                        <button id="stop-scan" class="px-4 py-2 bg-red-600 text-white rounded-lg hidden">Stop
+                            Scan</button>
+                    </div>
+
+                    <!-- Tempat preview kamera -->
+                    <div id="reader" class="w-full max-w-md mx-auto"></div>
+
+                    <div id="scan-result-container"
+                        class="mt-4 pt-4 border-t border-gray-200 min-h-[80px] flex items-center justify-center">
+                        <p class="text-sm text-gray-500">Pilih hari event lalu klik "Mulai Scan" untuk membuka kamera.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Library QR Scanner -->
+            <script src="https://unpkg.com/html5-qrcode"></script>
+            <script>
+                let html5QrCode;
+
+                function onScanSuccess(decodedText) {
+                    const day = document.getElementById("scan-day-select").value;
+                    if (!day) {
+                        document.getElementById('scan-result-container').innerHTML =
+                            `<p class="text-sm text-red-600 font-semibold">⚠️ Pilih hari event dulu sebelum scan.</p>`;
+                        return;
+                    }
+
+                    document.getElementById('scan-result-container').innerHTML =
+                        `<p class="text-sm text-blue-600">Memproses token <b>${decodedText}</b> untuk Hari ${day}...</p>`;
+
+                    fetch(`/admin/attendance`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                            },
+                            body: JSON.stringify({
+                                token: decodedText,
+                                day: day
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                document.getElementById('scan-result-container').innerHTML =
+                                    `<p class="text-sm text-green-600 font-semibold">✅ ${data.message}</p>`;
+                            } else {
+                                document.getElementById('scan-result-container').innerHTML =
+                                    `<p class="text-sm text-red-600 font-semibold">❌ ${data.message}</p>`;
+                            }
+                        })
+                        .catch(() => {
+                            document.getElementById('scan-result-container').innerHTML =
+                                `<p class="text-sm text-red-600">⚠️ Terjadi kesalahan server.</p>`;
+                        });
+                }
+
+                document.getElementById("start-scan").addEventListener("click", () => {
+                    const day = document.getElementById("scan-day-select").value;
+                    if (!day) {
+                        alert("Silakan pilih hari event terlebih dahulu!");
+                        return;
+                    }
+
+                    html5QrCode = new Html5Qrcode("reader");
+                    html5QrCode.start({
+                            facingMode: "environment"
+                        }, {
+                            fps: 10,
+                            qrbox: 250
+                        },
+                        onScanSuccess
+                    ).then(() => {
+                        document.getElementById("start-scan").classList.add("hidden");
+                        document.getElementById("stop-scan").classList.remove("hidden");
+                        document.getElementById("scan-result-container").innerHTML =
+                            `<p class="text-sm text-gray-500">Arahkan QR code peserta ke kamera.</p>`;
+                    });
+                });
+
+                document.getElementById("stop-scan").addEventListener("click", () => {
+                    if (html5QrCode) {
+                        html5QrCode.stop().then(() => {
+                            html5QrCode.clear();
+                            document.getElementById("stop-scan").classList.add("hidden");
+                            document.getElementById("start-scan").classList.remove("hidden");
+                            document.getElementById("scan-result-container").innerHTML =
+                                `<p class="text-sm text-gray-500">Scan dihentikan. Pilih hari lalu klik "Mulai Scan" untuk memulai lagi.</p>`;
+                        });
+                    }
+                });
+            </script>
+
+            {{-- End Scan barcode --}}
 
             <div id="absen-massal" class="tab-content hidden">
                 <h3 class="font-bold text-lg mb-2">Absen Massal (Live Search)</h3>
@@ -148,7 +268,8 @@
                             <div class="flex items-center">
                                 <div
                                     class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                                    <i class="fa-solid fa-check"></i></div>
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
                                 <div class="ml-3">
                                     <p class="font-semibold">{{ $log->attendee->name }}</p>
                                     <p class="text-xs text-gray-500">{{ $log->attendee->token }} &bull;

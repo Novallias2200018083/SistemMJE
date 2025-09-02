@@ -75,6 +75,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('/events', EventController::class);
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
+    
 
     Route::get('/lottery', [LotteryController::class, 'index'])->name('lottery.index');
     // Hapus rute undian yang lama dan ganti dengan ini
