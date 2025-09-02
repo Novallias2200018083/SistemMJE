@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Ticket - {{ $attendee->token }}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -14,12 +15,10 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #f1f5f9; /* Fallback background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            font-family: DejaVu Sans, sans-serif;
+            background: #f1f5f9;
+            text-align: center;
+            margin: 0;
             padding: 20px;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
@@ -31,6 +30,7 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            margin: 0 auto;
             position: relative;
         }
 
@@ -62,7 +62,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        
+
         .event-year {
             font-size: 14px;
             font-weight: 800;
@@ -212,17 +212,19 @@
             font-weight: 800;
             color: #38bdf8;
         }
-        
+
         /* Print styles */
         @media print {
             @page {
                 size: A4;
                 margin: 0;
             }
+
             body {
                 background: white;
                 padding: 0;
             }
+
             .ticket-card {
                 box-shadow: none;
                 border: 1px solid #ccc;
@@ -232,6 +234,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="ticket-card">
         <div class="ticket-header">
@@ -245,18 +248,18 @@
 
         <div class="ticket-body">
             <h2 class="section-title">Informasi Peserta</h2>
-            
+
             <div class="detail-grid">
                 <div class="detail-item">
                     <div class="detail-label">Nama Lengkap</div>
                     <div class="detail-value">{{ $attendee->name }}</div>
                 </div>
-                
+
                 <div class="detail-item">
                     <div class="detail-label">Alamat</div>
                     <div class="detail-value">{{ $attendee->full_address }}</div>
                 </div>
-                
+
                 <div class="detail-item">
                     <div class="detail-label">Kabupaten/Kota</div>
                     <div class="detail-value">{{ $attendee->regency }}</div>
@@ -266,6 +269,9 @@
             <div class="token-section">
                 <div class="token-label">Kode Tiket Anda</div>
                 <div class="token-value">{{ $attendee->token }}</div>
+                <div class="flex justify-center mt-4">
+                    <img src="data:image/png;base64,{{ $qrCodeBase64 }}" alt="QR Code" width="150">
+                </div>
                 <div class="token-instruction">Tunjukkan kode ini saat registrasi</div>
             </div>
         </div>
@@ -278,4 +284,5 @@
         </div>
     </div>
 </body>
+
 </html>
