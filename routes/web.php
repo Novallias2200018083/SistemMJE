@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ExportController as AdminExportController;
 use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\TenanController;
+use App\Http\Controllers\Admin\TenanExportController;
 
 // --- Tenant Controllers ---
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
@@ -28,6 +29,7 @@ use App\Models\Tenant;
 |--------------------------------------------------------------------------
 | Rute ini dapat diakses oleh siapa saja tanpa perlu login.
 */
+
 Route::get('/', [PublicController::class, 'home'])->name('home');
 Route::get('/register-event', [AttendeeController::class, 'create'])->name('event.register.form');
 Route::post('/register-event', [AttendeeController::class, 'store'])->name('event.register.submit');
@@ -75,7 +77,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('/events', EventController::class);
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
-    
+
 
     Route::get('/lottery', [LotteryController::class, 'index'])->name('lottery.index');
     // Hapus rute undian yang lama dan ganti dengan ini
@@ -90,9 +92,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/export/users/complete', [ExportController::class, 'completeUsers'])->name('export.users.complete');
     Route::get('/export/users/demographics', [ExportController::class, 'demographics'])->name('export.users.demographics');
 
-      // Rute untuk Presensi Massal
+    // Rute untuk Presensi Massal
     Route::post('/attendance/mass-store', [AttendanceController::class, 'storeMass'])->name('attendance.mass_store');
-    
+
     // Rute untuk Export Analisis Kehadiran
     Route::get('/export/attendance/analysis/{day}', [ExportController::class, 'attendanceAnalysis'])->name('export.attendance.analysis');
 
@@ -101,9 +103,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/attendance/store-ajax', [AttendanceController::class, 'storeAjax'])->name('attendance.storeAjax');
 
     Route::get('/attendance/find-for-mass-absen', [AttendanceController::class, 'findForMassAbsen'])->name('attendance.findForMassAbsen');
-    
-     // Grup untuk Export
-    Route::prefix('export')->name('export.')->controller(ExportController::class)->group(function() {
+
+    // Grup untuk Export
+    Route::prefix('export')->name('export.')->controller(ExportController::class)->group(function () {
         // ... (route export Anda yang lain)
 
         // TAMBAHKAN ROUTE INI
@@ -116,7 +118,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/export/tenants/complete', [ExportController::class, 'completeTenants'])
         ->name('export.tenants.complete');
 
-
+    // Rute untuk Export Tenants
+    Route::prefix('export/tenants')->name('export.tenants.')->controller(TenanExportController::class)->group(function () {
+        Route::get('/complete', 'complete')->name('complete');
+        Route::get('/sales', 'sales')->name('sales');
+        Route::get('/categories', 'categories')->name('categories');
+        Route::get('/daily', 'daily')->name('daily');
+        Route::get('/summary', 'summary')->name('summary');
+    });
 });
 
 
@@ -142,4 +151,4 @@ Route::middleware(['auth', 'role:tenant'])->prefix('tenant')->name('tenant.')->g
 
 
 // Memuat rute-rute autentikasi (login, register, logout, dll.)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

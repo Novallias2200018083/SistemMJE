@@ -25,17 +25,9 @@
             </div>
             <div class="bg-white p-10 rounded-2xl shadow-sm text-center">
                 <p class="text-gray-500 text-lg">Total Penjualan</p>
-                <p class="text-5xl font-bold text-gray-800">Rp {{ number_format($totalSales) }}</p>
+                <p class="text-5xl font-bold text-gray-800">Rp {{ number_format($totalSales, 0, ',', '.') }}</p>
             </div>
         </div>
-        {{-- <div class="bg-white p-6 rounded-lg shadow-sm">
-            <p class="text-gray-500 text-sm">Target Hari 1</p>
-            <p class="text-3xl font-bold text-gray-800">Rp {{ number_format($targetDay1) }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-sm">
-            <p class="text-gray-500 text-sm">Target Hari 2 & 3</p>
-            <p class="text-3xl font-bold text-gray-800">Rp {{ number_format($targetDay2 + $targetDay3) }}</p>
-        </div> --}}
     </div>
 
     <!-- Konten Utama dengan Tabs -->
@@ -66,7 +58,7 @@
                         <div>
                             <label for="search" class="text-sm font-medium">Pencarian</label>
                             <input type="text" name="search" id="search" value="{{ request('search') }}"
-                                placeholder="Nama Tenant" class="mt-1 w-full border-gray-300 rounded-lg shadow-sm">
+                                placeholder="Nama Tenan" class="mt-1 w-full border-gray-300 rounded-lg shadow-sm">
                         </div>
                         <div>
                             <label for="category" class="text-sm font-medium">Kategori</label>
@@ -94,9 +86,10 @@
                                 <p class="text-sm text-gray-500">{{ $tenant->category }}</p>
                                 <div class="flex items-center gap-x-4 text-sm mt-2">
                                     <span><i class="fa-solid fa-sack-dollar mr-1"></i> Rp
-                                        {{ number_format($tenant->total_sales) }}</span>
-                                    <span><i class="fa-solid fa-bullseye mr-1"></i> Target H1: Rp
-                                        {{ number_format($tenant->target_day_1) }}</span>
+                                        {{ number_format($tenant->sales_sum_amount, 0, ',', '.') }}
+                                    </span>
+                                    {{-- <span><i class="fa-solid fa-bullseye mr-1"></i> Target H1: Rp
+                                        {{ number_format($tenant->target_day_1) }}</span> --}}
                                 </div>
                             </div>
                             <div class="flex space-x-2">
@@ -105,7 +98,7 @@
                                     <i class="fa-solid fa-pencil mr-2"></i>Edit
                                 </a>
                                 <form action="{{ route('admin.tenan.destroy', $tenant->id) }}" method="POST"
-                                    onsubmit="return confirm('Yakin hapus tenant ini?');">
+                                    onsubmit="return confirm('Yakin hapus tenan ini?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
@@ -118,7 +111,7 @@
                     @empty
                         <div class="text-center py-12 text-gray-500">
                             <i class="fa-solid fa-store-slash fa-3x mb-4"></i>
-                            <p>Tidak ada tenant ditemukan.</p>
+                            <p>Tidak ada tenan ditemukan.</p>
                         </div>
                     @endforelse
                 </div>
@@ -127,26 +120,67 @@
 
             <!-- Tab: Analisis -->
             <div id="analisis" class="tab-content hidden">
-                <h3 class="font-bold text-lg mb-4">Distribusi Tenan per Kategori</h3>
-                <div class="space-y-3">
+                <div class="space-y-4">
                     @foreach ($categoryDistribution as $category => $total)
-                        <div class="flex items-center">
-                            <span class="w-1/3 text-gray-600">{{ $category }}</span>
-                            <span class="w-2/3 font-medium">{{ $total }}</span>
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-gray-700">{{ ucfirst($category) }}</span>
+                                <span class="text-sm font-bold text-gray-900">{{ $total }} Tenan</span>
+                            </div>
+
+                            {{-- Progress Bar --}}
+                            <div class="w-full bg-gray-100 rounded-full h-3">
+                                <div class="bg-blue-500 h-3 rounded-full"
+                                    style="width: {{ ($total / $totalTenants) * 100 }}%">
+                                </div>
+                            </div>
                         </div>
                     @endforeach
                 </div>
             </div>
 
+
             <!-- Tab: Laporan -->
             <div id="laporan" class="tab-content hidden">
-                <h3 class="font-bold text-lg mb-4">Laporan & Export Tenan</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    {{-- Data Lengkap --}}
                     <a href="{{ route('admin.export.tenants.complete') }}"
                         class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
-                        <i class="fa-solid fa-download fa-2x mb-3"></i>
+                        <i class="fa-solid fa-database fa-2x mb-3 text-blue-600"></i>
                         <p class="font-semibold">Data Lengkap</p>
-                        <p class="text-sm opacity-80">CSV format</p>
+                        <p class="text-sm opacity-80">CSV / Excel</p>
+                    </a>
+
+                    {{-- Laporan Penjualan per Tenant --}}
+                    <a href="{{ route('admin.export.tenants.sales') }}"
+                        class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
+                        <i class="fa-solid fa-sack-dollar fa-2x mb-3 text-green-600"></i>
+                        <p class="font-semibold">Penjualan per Tenant</p>
+                        <p class="text-sm opacity-80">Excel / PDF</p>
+                    </a>
+
+                    {{-- Laporan Penjualan per Kategori --}}
+                    <a href="{{ route('admin.export.tenants.categories') }}"
+                        class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
+                        <i class="fa-solid fa-chart-pie fa-2x mb-3 text-purple-600"></i>
+                        <p class="font-semibold">Penjualan per Kategori</p>
+                        <p class="text-sm opacity-80">Excel / PDF</p>
+                    </a>
+
+                    {{-- Laporan Harian --}}
+                    <a href="{{ route('admin.export.tenants.daily') }}"
+                        class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
+                        <i class="fa-solid fa-calendar-day fa-2x mb-3 text-indigo-600"></i>
+                        <p class="font-semibold">Laporan Harian</p>
+                        <p class="text-sm opacity-80">Excel / PDF</p>
+                    </a>
+
+                    {{-- Ringkasan Cepat --}}
+                    <a href="{{ route('admin.export.tenants.summary') }}"
+                        class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
+                        <i class="fa-solid fa-clipboard-list fa-2x mb-3 text-yellow-600"></i>
+                        <p class="font-semibold">Ringkasan</p>
+                        <p class="text-sm opacity-80">PDF</p>
                     </a>
                 </div>
             </div>

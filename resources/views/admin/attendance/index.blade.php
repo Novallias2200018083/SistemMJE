@@ -30,25 +30,36 @@
 
     <div class="bg-white p-6 rounded-lg shadow-sm">
         <div class="border-b border-gray-200 mb-6">
-            <nav class="-mb-px flex space-x-6" id="tabs">
-                <a href="#absen-scan"
-                    class="tab-link py-2 px-1 border-b-2 border-teal-500 font-semibold text-teal-600">Scan QR</a>
-                <a href="#absen-manual"
-                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Absen
-                    Manual</a>
-                <a href="#absen-massal"
-                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Absen
-                    Massal</a>
-                <a href="#data-kehadiran"
-                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Data
-                    Kehadiran</a>
-                <a href="#analisis"
-                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Analisis</a>
-                <a href="#laporan"
-                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Laporan</a>
+            <nav id="tabs"
+                class="-mb-px flex space-x-6 overflow-x-auto scrollbar-hide md:overflow-visible md:flex-nowrap">
 
+                <a href="#absen-scan"
+                    class="tab-link py-2 px-1 border-b-2 border-teal-500 font-semibold text-teal-600 whitespace-nowrap">
+                    Scan QR
+                </a>
+                <a href="#absen-manual"
+                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
+                    Absen Manual
+                </a>
+                <a href="#absen-massal"
+                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
+                    Absen Massal
+                </a>
+                <a href="#data-kehadiran"
+                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
+                    Data Kehadiran
+                </a>
+                <a href="#analisis"
+                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
+                    Analisis
+                </a>
+                <a href="#laporan"
+                    class="tab-link py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
+                    Laporan
+                </a>
             </nav>
         </div>
+
 
         @if (session('success'))
             <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">{{ session('success') }}</div>
@@ -58,7 +69,7 @@
         @endif
 
         <div id="tab-contents">
-            <div id="absen-manual" class="tab-content">
+            <div id="absen-manual" class="tab-content hidden">
                 <h3 class="font-bold text-lg mb-2">Input Presensi Manual (Live Search)</h3>
                 <p class="text-gray-500 mb-4">Ketik token peserta untuk melakukan check-in. Hasil akan muncul otomatis.
                 </p>
@@ -156,10 +167,10 @@
                         .then(data => {
                             if (data.success) {
                                 document.getElementById('scan-result-container').innerHTML =
-                                    `<p class="text-sm text-green-600 font-semibold">✅ ${data.message}</p>`;
+                                    `<p class="text-sm text-green-600 font-semibold"> ${data.message}</p>`;
                             } else {
                                 document.getElementById('scan-result-container').innerHTML =
-                                    `<p class="text-sm text-red-600 font-semibold">❌ ${data.message}</p>`;
+                                    `<p class="text-sm text-red-600 font-semibold"> ${data.message}</p>`;
                             }
                         })
                         .catch(() => {

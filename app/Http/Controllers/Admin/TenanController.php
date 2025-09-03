@@ -5,15 +5,21 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
+use App\Models\Sale;
 
 class TenanController extends Controller
 {
     public function index()
     {
-        $tenans = Tenant::with('user')->latest()->paginate(12);
+        // $tenans = Tenant::with('user')->latest()->paginate(12);
+
+        $tenans = Tenant::with('user')
+            ->withSum('sales', 'amount')
+            ->latest()
+            ->paginate(12);
 
         $totalTenants = Tenant::count();
-        $totalSales   = Tenant::sum('total_sales');
+        $totalSales   = Sale::sum('amount');
         $targetDay1   = Tenant::sum('target_day_1');
         $targetDay2   = Tenant::sum('target_day_2');
         $targetDay3   = Tenant::sum('target_day_3');
@@ -59,7 +65,6 @@ class TenanController extends Controller
             'user_id' => 'nullable|exists:users,id',
             'tenant_name' => 'required|string|max:255',
             'category' => 'nullable|string|max:255',
-            'total_sales' => 'nullable|integer',
             'target_day_1' => 'nullable|integer',
             'target_day_2' => 'nullable|integer',
             'target_day_3' => 'nullable|integer',
@@ -73,8 +78,24 @@ class TenanController extends Controller
 
     public function edit(Tenant $tenan)
     {
-        $categories = $this->categories();
-        return view('admin.tenan.edit', compact('tenan', 'categories'));
+        $categories   = $this->categories();
+        $totalTenants = Tenant::count();
+        $totalSales   = Sale::sum('amount');
+        $targetDay1   = Tenant::sum('target_day_1');
+        $targetDay2   = Tenant::sum('target_day_2');
+        $targetDay3   = Tenant::sum('target_day_3');
+
+        $categories = Tenant::select('category')->distinct()->pluck('category');
+
+        return view('admin.tenan.edit', compact(
+            'tenan',
+            'categories',
+            'totalTenants',
+            'totalSales',
+            'targetDay1',
+            'targetDay2',
+            'targetDay3'
+        ));
     }
 
     public function update(Request $request, Tenant $tenan)
