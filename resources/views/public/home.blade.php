@@ -261,6 +261,11 @@
                 <a href="{{ route('lottery.check') }}"
                     class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300"><i
                         class="fa-solid fa-ticket mr-2"></i>Cek Undian</a>
+                <a href="{{ route('news.index') }}"
+                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300">
+                    <i class="fa-solid fa-newspaper fa-fw mr-3"></i>Portal Berita
+                </a>
+
             </nav>
             <div class="hidden md:flex items-center space-x-4">
                 <a href="{{ route('login') }}"
@@ -277,7 +282,7 @@
 
         <div id="mobile-menu"
             class="hidden md:hidden bg-white rounded-2xl shadow-lg mt-2 absolute top-24 left-4 right-4 z-20">
-            <nav class="flex flex-col p-6 space-y-5">
+            <nav class="flex flex-col p-7 space-y-5">
                 <a href="{{ route('home') }}"
                     class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
                         class="fa-solid fa-house fa-fw mr-3"></i>Beranda</a>
@@ -290,7 +295,9 @@
                 <a href="{{ route('lottery.check') }}"
                     class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
                         class="fa-solid fa-ticket fa-fw mr-3"></i>Cek Undian</a>
-                <hr class="border-gray-200 my-3">
+                <a href="{{ route('news.index') }}"
+                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300">
+                    <i class="fa-solid fa-newspaper fa-fw mr-3"></i>Portal Berita</a>
                 <a href="{{ route('login') }}"
                     class="w-full text-center px-6 py-3 border-2 border-sky-500 text-sky-600 rounded-xl font-semibold hover:bg-sky-500 hover:text-white transition-all duration-300">Portal
                     Tenan</a>

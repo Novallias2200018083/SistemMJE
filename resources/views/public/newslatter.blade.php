@@ -232,6 +232,34 @@
         .pulse-animation {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
+
+        .instagram-media {
+            max-height: 400px !important;
+            overflow: hidden !important;
+            border-radius: 12px;
+        }
+
+        .insta-wrapper {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            /* samain tinggi semua card */
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
+            /* biar ga kelihatan abu-abu */
+        }
+
+        .insta-wrapper iframe {
+            position: absolute;
+            top: -60px;
+            /* geser header ke atas */
+            left: 0;
+            width: 100% !important;
+            height: calc(100% + 60px) !important;
+            /* tambah tinggi buat nutup bawah */
+            border: 0;
+        }
     </style>
 </head>
 
@@ -259,10 +287,10 @@
                     class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300"><i
                         class="fa-solid fa-print mr-2"></i>Cetak Tiket</a>
                 <a href="{{ route('lottery.check') }}"
-                    class="bg-gray-900 text-white px-5 py-3 rounded-xl font-semibold shadow-lg hover:bg-gray-800 transition-all duration-300"><i
+                    class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300"><i
                         class="fa-solid fa-ticket mr-2"></i>Cek Undian</a>
                 <a href="{{ route('news.index') }}"
-                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300">
+                    class="bg-gray-900 text-white px-5 py-3 rounded-xl font-semibold shadow-lg hover:bg-gray-800 transition-all duration-300">
                     <i class="fa-solid fa-newspaper fa-fw mr-3"></i>Portal Berita
                 </a>
             </nav>
@@ -292,10 +320,10 @@
                     class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
                         class="fa-solid fa-print fa-fw mr-3"></i>Cetak Tiket</a>
                 <a href="{{ route('lottery.check') }}"
-                    class="text-gray-700 bg-sky-50 text-sky-600 font-semibold px-4 py-3 rounded-lg"><i
+                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
                         class="fa-solid fa-ticket fa-fw mr-3"></i>Cek Undian</a>
                 <a href="{{ route('news.index') }}"
-                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300">
+                    class="text-gray-700 bg-sky-50 text-sky-600 font-semibold px-4 py-3 rounded-lg">
                     <i class="fa-solid fa-newspaper fa-fw mr-3"></i>Portal Berita
                 </a>
                 <hr class="border-gray-200 my-3">
@@ -305,95 +333,43 @@
             </nav>
         </div>
         <main class="my-12">
-            <div class="max-w-4xl mx-auto">
-                @if (!$isDrawTime)
-                    <div class="bg-white p-8 sm:p-10 rounded-2xl shadow-xl text-center">
-                        <div
-                            class="mx-auto w-24 h-24 bg-gradient-to-br from-sky-100 to-blue-100 rounded-full flex items-center justify-center mb-6">
-                            <i class="fa-solid fa-clock text-5xl text-sky-500"></i>
-                        </div>
-                        <h2 class="text-3xl font-bold text-gray-800">Pengundian Akan Segera Dimulai</h2>
-                        <p class="text-gray-600 mt-2 max-w-lg mx-auto">Daftar pemenang akan diumumkan setelah event
-                            berakhir. Pastikan Anda telah melakukan presensi untuk kesempatan menang!</p>
-                        <div class="mt-8 text-lg text-gray-700 bg-gray-50 p-6 rounded-xl border">
-                            <p>Nantikan pengumuman pemenang pada:</p>
-                            <p class="font-bold text-2xl text-sky-600 mt-2">{{ $drawTime->format('d F Y, H:i') }} WIB
-                            </p>
-                        </div>
-                    </div>
-                @else
-                    <div class="bg-white p-8 sm:p-10 rounded-2xl shadow-xl text-center">
-                        <div
-                            class="mx-auto w-24 h-24 bg-gradient-to-br from-amber-100 to-yellow-100 rounded-full flex items-center justify-center mb-6">
-                            <i class="fa-solid fa-trophy text-5xl text-amber-500"></i>
-                        </div>
-                        <h2 class="text-3xl font-bold text-gray-800">Cek Status Undian Anda</h2>
-                        <p class="text-gray-600 mt-2">Masukkan nomor token Anda untuk melihat apakah Anda pemenangnya.
-                        </p>
-                        <form action="{{ route('lottery.check') }}" method="GET" class="mt-8 max-w-lg mx-auto flex">
-                            <input type="text" name="token" value="{{ $searchedToken }}"
-                                placeholder="Contoh: MJE-000001"
-                                class="flex-grow px-4 py-3 border border-gray-300 rounded-l-lg shadow-sm focus:ring-sky-500 focus:border-sky-500 text-lg">
-                            <button type="submit"
-                                class="bg-gray-900 text-white font-bold py-3 px-6 rounded-r-lg hover:bg-gray-700 transition-all duration-300">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <span class="ml-2 hidden sm:inline">Cek Token</span>
-                            </button>
-                        </form>
-                    </div>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 my-12">
+                <h1 class="text-3xl font-extrabold text-sky-700 mb-8 text-center">Portal Berita</h1>
 
-                    @if ($searchResult === 'win')
-                        <div
-                            class="mt-8 bg-green-50 border-l-4 border-green-400 text-green-800 p-6 rounded-lg shadow-lg text-center">
-                            <h3 class="text-2xl font-bold">SELAMAT! ANDA MENANG!</h3>
-                            <p class="mt-2">Token <strong>{{ $searchedToken }}</strong> terdaftar sebagai pemenang.
-                                Silakan hubungi panitia untuk informasi lebih lanjut.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    @forelse($news as $item)
+                        <div class="card-hover rounded-xl overflow-hidden bg-white shadow-md flex flex-col h-full">
+                            <div class="insta-wrapper h-100% bg-gray-200">
+                                @if ($item->embed_url)
+                                    {!! $item->embed_url !!}
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                        No Img
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="p-5 flex flex-col flex-1">
+                                <h2 class="text-xl font-bold mb-2">{{ $item->title }}</h2>
+                                <p class="text-gray-600 text-sm mb-4 flex-1">
+                                    {{ Str::limit(strip_tags($item->description), 120, '...') }}
+                                </p>
+                                <a href="{{ route('news.show', $item->id) }}"
+                                    class="text-sky-600 font-semibold hover:underline mt-auto">
+                                    Baca Selengkapnya →
+                                </a>
+                            </div>
                         </div>
-                    @elseif($searchResult === 'lose')
-                        <div
-                            class="mt-8 bg-amber-50 border-l-4 border-amber-400 text-amber-800 p-6 rounded-lg shadow-lg text-center">
-                            <h3 class="text-2xl font-bold">MOHON MAAF, ANDA BELUM BERUNTUNG</h3>
-                            <p class="mt-2">Token <strong>{{ $searchedToken }}</strong> tidak terdaftar sebagai
-                                pemenang. Terima kasih atas partisipasi Anda!</p>
-                        </div>
-                    @endif
+                    @empty
+                        <p class="col-span-3 text-center text-gray-500">Belum ada berita.</p>
+                    @endforelse
+                </div>
 
-                    <div class="mt-16">
-                        <div class="text-center mb-12">
-                            <h2 class="text-4xl font-bold text-gray-800 mb-4">Daftar Pemenang Doorprize</h2>
-                            <p class="text-xl text-gray-600">Selamat kepada para pemenang yang beruntung!</p>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            @forelse ($winners as $winner)
-                                <div class="bg-white p-6 rounded-2xl shadow-lg winner-card">
-                                    <div class="flex items-center space-x-4">
-                                        <div
-                                            class="bg-gradient-to-br from-amber-400 to-yellow-400 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-md">
-                                            <i class="fa-solid fa-award fa-2x"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-bold text-lg text-gray-800">
-                                                {{ Str::mask($winner->attendee->name, '*', 3, -1) }}</p>
-                                            <p class="text-sm text-gray-500">{{ $winner->attendee->regency }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 border-t pt-4 text-sm text-gray-600">
-                                        <p class="font-semibold">Memenangkan: <span
-                                                class="text-sky-600">{{ $winner->prize->name }}</span></p>
-                                        <p class="text-xs text-gray-400 mt-1">Diundi pada:
-                                            {{ $winner->drawn_at->format('d M Y') }}</p>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-12">
-                                    <i class="fa-solid fa-box-open text-6xl text-gray-300 mb-4"></i>
-                                    <p class="text-xl text-gray-500">Belum ada pemenang yang diundi.</p>
-                                </div>
-                            @endforelse
-                        </div>
-                    </div>
-                @endif
+                {{-- pagination --}}
+                <div class="mt-6">
+                    {{ $news->links() }}
+                </div>
             </div>
+
         </main>
     </div>
 

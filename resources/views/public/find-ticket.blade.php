@@ -822,6 +822,11 @@
                 <a href="{{ route('lottery.check') }}"
                     class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300"><i
                         class="fa-solid fa-ticket mr-2"></i>Cek Undian</a>
+                <a href="{{ route('news.index') }}"
+                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300">
+                    <i class="fa-solid fa-newspaper fa-fw mr-3"></i>Portal Berita
+                </a>
+
             </nav>
             <div class="hidden md:flex items-center space-x-4">
                 <a href="{{ route('login') }}"
@@ -851,6 +856,10 @@
                 <a href="{{ route('lottery.check') }}"
                     class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
                         class="fa-solid fa-ticket fa-fw mr-3"></i>Cek Undian</a>
+                <a href="{{ route('news.index') }}"
+                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300">
+                    <i class="fa-solid fa-newspaper fa-fw mr-3"></i>Portal Berita
+                </a>
                 <hr class="border-gray-200 my-3">
                 <a href="{{ route('login') }}"
                     class="w-full text-center px-6 py-3 border-2 border-sky-500 text-sky-600 rounded-xl font-semibold hover:bg-sky-500 hover:text-white transition-all duration-300">Portal
