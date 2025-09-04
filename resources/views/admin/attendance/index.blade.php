@@ -152,7 +152,7 @@
                     document.getElementById('scan-result-container').innerHTML =
                         `<p class="text-sm text-blue-600">Memproses token <b>${decodedText}</b> untuk Hari ${day}...</p>`;
 
-                    fetch(`/admin/attendance`, {
+                    fetch(`/admin/attendance/store-ajax`, {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -163,19 +163,19 @@
                                 day: day
                             })
                         })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                document.getElementById('scan-result-container').innerHTML =
-                                    `<p class="text-sm text-green-600 font-semibold"> ${data.message}</p>`;
-                            } else {
-                                document.getElementById('scan-result-container').innerHTML =
-                                    `<p class="text-sm text-red-600 font-semibold"> ${data.message}</p>`;
+                        .then(res => {
+                            if (!res.ok) {
+                                return res.json().then(err => Promise.reject(err));
                             }
+                            return res.json();
                         })
-                        .catch(() => {
+                        .then(data => {
                             document.getElementById('scan-result-container').innerHTML =
-                                `<p class="text-sm text-red-600">⚠️ Terjadi kesalahan server.</p>`;
+                                `<p class="text-sm text-green-600 font-semibold">${data.message}</p>`;
+                        })
+                        .catch(err => {
+                            document.getElementById('scan-result-container').innerHTML =
+                                `<p class="text-sm text-red-600 font-semibold">${err.message || '⚠️ Terjadi kesalahan server.'}</p>`;
                         });
                 }
 
@@ -197,7 +197,7 @@
                     ).then(() => {
                         document.getElementById("start-scan").classList.add("hidden");
                         document.getElementById("stop-scan").classList.remove("hidden");
-                        document.getElementById("scan-result-container").innerHTML =
+                        document.getElementById('scan-result-container').innerHTML =
                             `<p class="text-sm text-gray-500">Arahkan QR code peserta ke kamera.</p>`;
                     });
                 });
@@ -255,6 +255,7 @@
                 </form>
             </div>
 
+            {{-- Data Kehadiran --}}
             <div id="data-kehadiran" class="tab-content hidden">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-bold text-lg">Log Data Kehadiran</h3>

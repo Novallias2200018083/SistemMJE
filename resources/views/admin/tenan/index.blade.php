@@ -146,7 +146,7 @@
                     {{-- Data Lengkap --}}
                     <a href="{{ route('admin.export.tenants.complete') }}"
                         class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
-                        <i class="fa-solid fa-database fa-2x mb-3 text-blue-600"></i>
+                        <i class="fa-solid fa-database fa-2x mb-3 text-gray-600"></i>
                         <p class="font-semibold">Data Lengkap</p>
                         <p class="text-sm opacity-80">CSV / Excel</p>
                     </a>
@@ -154,7 +154,7 @@
                     {{-- Laporan Penjualan per Tenant --}}
                     <a href="{{ route('admin.export.tenants.sales') }}"
                         class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
-                        <i class="fa-solid fa-sack-dollar fa-2x mb-3 text-green-600"></i>
+                        <i class="fa-solid fa-sack-dollar fa-2x mb-3 text-gray-600"></i>
                         <p class="font-semibold">Penjualan per Tenant</p>
                         <p class="text-sm opacity-80">Excel / PDF</p>
                     </a>
@@ -162,7 +162,7 @@
                     {{-- Laporan Penjualan per Kategori --}}
                     <a href="{{ route('admin.export.tenants.categories') }}"
                         class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
-                        <i class="fa-solid fa-chart-pie fa-2x mb-3 text-purple-600"></i>
+                        <i class="fa-solid fa-chart-pie fa-2x mb-3 text-gray-600"></i>
                         <p class="font-semibold">Penjualan per Kategori</p>
                         <p class="text-sm opacity-80">Excel / PDF</p>
                     </a>
@@ -170,7 +170,7 @@
                     {{-- Laporan Harian --}}
                     <a href="{{ route('admin.export.tenants.daily') }}"
                         class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
-                        <i class="fa-solid fa-calendar-day fa-2x mb-3 text-indigo-600"></i>
+                        <i class="fa-solid fa-calendar-day fa-2x mb-3  text-gray-600"></i>
                         <p class="font-semibold">Laporan Harian</p>
                         <p class="text-sm opacity-80">Excel / PDF</p>
                     </a>
@@ -178,7 +178,7 @@
                     {{-- Ringkasan Cepat --}}
                     <a href="{{ route('admin.export.tenants.summary') }}"
                         class="block p-6 bg-white border rounded-lg hover:bg-gray-50 text-center transition">
-                        <i class="fa-solid fa-clipboard-list fa-2x mb-3 text-yellow-600"></i>
+                        <i class="fa-solid fa-clipboard-list fa-2x mb-3  text-gray-600"></i>
                         <p class="font-semibold">Ringkasan</p>
                         <p class="text-sm opacity-80">PDF</p>
                     </a>
