@@ -90,6 +90,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/lottery/draw/{prize}', [LotteryController::class, 'draw'])->name('lottery.draw');
     Route::patch('/lottery/claim/{winner}', [LotteryController::class, 'claim'])->name('lottery.claim');
     Route::resource('/lottery', LotteryController::class)->parameters(['lottery' => 'prize']);
+    // Halaman spin/roulette
+Route::get('/lottery/spin/{prize}', [LotteryController::class, 'showSpinner'])->name('lottery.spin');
+
 
     Route::get('/export/attendance/{day}', [AdminExportController::class, 'attendance'])->name('export.attendance');
     // Ganti rute-rute UserController yang lama dengan ini:
