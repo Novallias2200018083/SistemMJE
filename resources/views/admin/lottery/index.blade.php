@@ -135,7 +135,7 @@
                                 $phone = preg_replace('/^0/', '62', $winner->attendee->phone_number); 
                                 $message = urlencode("Selamat {$winner->attendee->name}, Anda terpilih sebagai pemenang doorprize {$winner->prize->name} di acara Jogja Expo 2025. Apakah sodara berkenan untuk melakukan video call.");
                             @endphp
-                            <a href="https://wa.me/{{ $phone }}?text={{ $message }}" target="_blank"
+                            <a href="https://web.whatsapp.com/send?phone={{ $phone }}&text={{ $message }}" target="_blank"
                             class="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold text-sm hover:bg-green-700">
                             Hubungi via WA
                             </a>
