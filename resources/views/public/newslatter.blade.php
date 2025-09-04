@@ -336,10 +336,38 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 my-12">
                 <h1 class="text-3xl font-extrabold text-sky-700 mb-8 text-center">Portal Berita</h1>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    @forelse($news as $item)
+                {{-- mobile: max 4 berita, grid 2 kolom --}}
+                <div class="grid grid-cols-2 gap-6 lg:hidden">
+                    @foreach ($news->take(4) as $item)
                         <div class="card-hover rounded-xl overflow-hidden bg-white shadow-md flex flex-col h-full">
-                            <div class="insta-wrapper h-100% bg-gray-200">
+                            <div class="insta-wrapper aspect-[4/3] bg-gray-200">
+                                @if ($item->embed_url)
+                                    {!! $item->embed_url !!}
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                        No Img
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="p-4 flex flex-col flex-1">
+                                <h2 class="text-base font-bold mb-2">{{ $item->title }}</h2>
+                                <p class="text-gray-600 text-sm mb-3 flex-1">
+                                    {{ Str::limit(strip_tags($item->description), 80, '...') }}
+                                </p>
+                                <a href="{{ route('news.show', $item->id) }}"
+                                    class="text-sky-600 font-semibold hover:underline mt-auto">
+                                    Baca Selengkapnya →
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                {{-- desktop: max 6 berita, grid 3 kolom --}}
+                <div class="hidden lg:grid grid-cols-3 gap-8">
+                    @foreach ($news->take(6) as $item)
+                        <div class="card-hover rounded-xl overflow-hidden bg-white shadow-md flex flex-col h-full">
+                            <div class="insta-wrapper aspect-video bg-gray-200">
                                 @if ($item->embed_url)
                                     {!! $item->embed_url !!}
                                 @else
@@ -349,9 +377,9 @@
                                 @endif
                             </div>
                             <div class="p-5 flex flex-col flex-1">
-                                <h2 class="text-xl font-bold mb-2">{{ $item->title }}</h2>
+                                <h2 class="text-lg font-bold mb-2">{{ $item->title }}</h2>
                                 <p class="text-gray-600 text-sm mb-4 flex-1">
-                                    {{ Str::limit(strip_tags($item->description), 120, '...') }}
+                                    {{ Str::limit(strip_tags($item->description), 100, '...') }}
                                 </p>
                                 <a href="{{ route('news.show', $item->id) }}"
                                     class="text-sky-600 font-semibold hover:underline mt-auto">
@@ -359,14 +387,15 @@
                                 </a>
                             </div>
                         </div>
-                    @empty
-                        <p class="col-span-3 text-center text-gray-500">Belum ada berita.</p>
-                    @endforelse
+                    @endforeach
                 </div>
 
-                {{-- pagination --}}
-                <div class="mt-6">
-                    {{ $news->links() }}
+                {{-- tombol lihat semua berita (selalu tampil) --}}
+                <div class="mt-8 text-center">
+                    <a href="{{ route('news.index') }}"
+                        class="inline-block bg-sky-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-sky-700 transition">
+                        Lihat Semua Berita
+                    </a>
                 </div>
             </div>
 
