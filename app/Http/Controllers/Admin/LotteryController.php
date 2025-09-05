@@ -34,6 +34,22 @@ class LotteryController extends Controller
         ));
     }
 
+/**
+ * Menampilkan halaman roulette/spin untuk hadiah tertentu.
+ */
+public function showSpinner(Prize $prize)
+{
+    // Ambil peserta eligible yang belum pernah menang
+    $winnerIds = LotteryWinner::pluck('attendee_id');
+
+    $attendees = Attendee::whereHas('attendances')
+                         ->whereNotIn('id', $winnerIds)
+                         ->get();
+
+    // Pastikan view ini ada: resources/views/admin/lottery/spin.blade.php
+    return view('admin.lottery.spin', compact('prize', 'attendees'));
+}
+
     /**
      * Menyimpan hadiah baru.
      */
@@ -55,37 +71,38 @@ class LotteryController extends Controller
     /**
      * Melakukan proses pengundian untuk hadiah tertentu.
      */
-    public function draw(Prize $prize)
-    {
-        // Cek sisa hadiah
-        $drawnCount = $prize->winners()->count();
-        if ($drawnCount >= $prize->quantity) {
-            return back()->with('error', 'Semua hadiah ' . $prize->name . ' sudah diundi.');
-        }
+public function draw(Request $request, Prize $prize)
+{
+    $attendeeId = $request->input('attendee_id');
 
-        // Ambil ID semua yang sudah pernah menang
-        $winnerIds = LotteryWinner::pluck('attendee_id');
-
-        // Cari 1 peserta acak yang:
-        // 1. Pernah hadir (minimal 1 kali)
-        // 2. Belum pernah menang hadiah apapun
-        $eligibleWinner = Attendee::whereHas('attendances')
-                                  ->whereNotIn('id', $winnerIds)
-                                  ->inRandomOrder()
-                                  ->first();
-
-        if (!$eligibleWinner) {
-            return back()->with('error', 'Tidak ada peserta yang memenuhi syarat untuk diundi.');
-        }
-
-        // Simpan sebagai pemenang
-        LotteryWinner::create([
-            'attendee_id' => $eligibleWinner->id,
-            'prize_id' => $prize->id,
-        ]);
-
-        return redirect()->route('admin.lottery.index', ['#pemenang'])->with('success', 'Selamat! Pemenang untuk ' . $prize->name . ' adalah ' . $eligibleWinner->name);
+    // Validasi
+    $winnerIds = LotteryWinner::pluck('attendee_id');
+    if (in_array($attendeeId, $winnerIds->toArray())) {
+        return response()->json(['error' => 'Peserta sudah pernah menang'], 422);
     }
+
+    $attendee = Attendee::find($attendeeId);
+    if (!$attendee) {
+        return response()->json(['error' => 'Peserta tidak ditemukan'], 404);
+    }
+
+    // Simpan pemenang
+    LotteryWinner::create([
+        'attendee_id' => $attendee->id,
+        'prize_id' => $prize->id,
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'winner' => [
+            'id' => $attendee->id,
+            'name' => $attendee->name,
+            'phone_number' => $attendee->phone_number
+        ]
+    ]);
+}
+
+
 
     /**
      * Menandai hadiah sudah diambil oleh pemenang.

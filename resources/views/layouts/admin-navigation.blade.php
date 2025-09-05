@@ -56,6 +56,12 @@
             <span class="sidebar-text">Manajemen Acara</span>
         </a>
 
+        <a href="{{ route('admin.newslatter.index') }}"
+            class="menu-item flex items-center px-4 py-2.5 rounded-lg font-semibold transition-colors duration-200 {{ request()->routeIs('admin.newslatter.*') ? 'bg-teal-600 text-white shadow' : 'text-gray-600 hover:bg-gray-100' }}">
+            <i class="fa-solid fa-newspaper fa-fw mr-3"></i>
+            <span class="sidebar-text">Manajemen Berita</span>
+        </a>
+
         <a href="{{ route('admin.attendance.index') }}"
             class="menu-item flex items-center px-4 py-2.5 rounded-lg font-semibold transition-colors duration-200 {{ request()->routeIs('admin.attendance.*') ? 'bg-teal-600 text-white shadow' : 'text-gray-600 hover:bg-gray-100' }}">
             <i class="fa-solid fa-user-check fa-fw mr-3"></i>

@@ -291,6 +291,9 @@
                 <a href="{{ route('lottery.check') }}"
                     class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
                         class="fa-solid fa-ticket fa-fw mr-3"></i>Cek Undian</a>
+                <a href="#"
+                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
+                        class="fa-solid fa-print fa-fw mr-3"></i>Portal Berita</a>
                 <hr class="border-gray-200 my-3">
                 <a href="{{ route('login') }}"
                     class="w-full text-center px-6 py-3 border-2 border-sky-500 text-sky-600 rounded-xl font-semibold hover:bg-sky-500 hover:text-white transition-all duration-300">Portal
