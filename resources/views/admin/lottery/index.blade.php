@@ -91,50 +91,66 @@
                 @empty
                     <p class="col-span-3 text-center text-gray-500 py-12">Belum ada hadiah yang ditambahkan.</p>
                 @endforelse
-            </div>
 
+            </div>
             <!-- Tab: Pemenang -->
-            <div id="pemenang" class="tab-content hidden space-y-3">
-                @forelse($winners as $winner)
-                    <div class="border rounded-lg p-4 flex flex-wrap items-center justify-between gap-4">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-12 h-12 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center">
-                                <i class="fa-solid fa-trophy fa-lg"></i>
-                            </div>
-                            <div>
-                                <p class="font-bold">{{ $winner->attendee->name }}</p>
-                                <p class="text-sm font-semibold text-gray-700">{{ $winner->prize->name }}</p>
-                                <p class="text-xs text-gray-500">{{ $winner->attendee->token }} &bull; {{ $winner->attendee->phone_number }} &bull; {{ $winner->created_at->format('d/m/Y') }}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            @if ($winner->is_claimed)
-                                <span class="px-4 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-lg"><i
-                                        class="fa-solid fa-check-circle mr-2"></i>Sudah Diambil</span>
-                            @else
-                                <span class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-100 rounded-lg">Belum
-                                    Diambil</span>
-                                <form action="{{ route('admin.lottery.claim', $winner->id) }}" method="POST">@csrf
-                                    @method('PATCH')<button type="submit"
-                                        class="px-4 py-2 bg-teal-600 text-white rounded-lg font-semibold text-sm hover:bg-teal-700">Tandai
-                                        Diambil</button></form>
-
-                            {{-- Tombol WhatsApp --}}
-                            @php
-                                $phone = preg_replace('/^0/', '62', $winner->attendee->phone_number); 
-                                $message = urlencode("Selamat {$winner->attendee->name}, Anda terpilih sebagai pemenang doorprize {$winner->prize->name} di acara Jogja Expo 2025. Apakah sodara berkenan untuk melakukan video call.");
-                            @endphp
-                            <a href="https://web.whatsapp.com/send?phone={{ $phone }}&text={{ $message }}" target="_blank"
-                            class="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold text-sm hover:bg-green-700">
-                            Hubungi via WA
-                            </a>
-                            @endif
-                        </div>
-                    </div>
-                @empty
-                    <p class="text-center text-gray-500 py-12">Belum ada pemenang yang diundi.</p>
-                @endforelse
+<div id="pemenang" class="tab-content hidden space-y-3">
+    @forelse($winners as $winner)
+        <div class="border rounded-lg p-4 flex flex-wrap items-center justify-between gap-4">
+            <!-- Info Pemenang -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                    <i class="fa-solid fa-trophy fa-lg"></i>
+                </div>
+                <div>
+                    <p class="font-bold">{{ $winner->attendee->name }}</p>
+                    <p class="text-sm font-semibold text-gray-700">{{ $winner->prize->name }}</p>
+                    <p class="text-xs text-gray-500">
+                        {{ $winner->attendee->token }} &bull; {{ $winner->attendee->phone_number }} 
+                        &bull; {{ $winner->created_at->format('d/m/Y') }}
+                    </p>
+                </div>
             </div>
+
+            <!-- Aksi -->
+            <div class="flex items-center space-x-3">
+                @if ($winner->is_claimed)
+                    <span class="px-4 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-lg">
+                        <i class="fa-solid fa-check-circle mr-2"></i>Sudah Diambil
+                    </span>
+                @else
+                    <!-- Tombol Roll Lagi -->
+                    <form action="{{ route('admin.lottery.spin', $winner->prize->id) }}" method="GET">
+                        <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600">
+                            <i class="fa-solid fa-dice-d6 mr-2"></i>Roll Lagi
+                        </button>
+                    </form>
+
+                    <!-- Tombol Tandai Diambil -->
+                    <form action="{{ route('admin.lottery.claim', $winner->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="px-4 py-2 bg-teal-600 text-white rounded-lg font-semibold text-sm hover:bg-teal-700">
+                            Tandai Diambil
+                        </button>
+                    </form>
+
+                    <!-- Tombol WhatsApp -->
+                    @php
+                        $phone = preg_replace('/^0/', '62', $winner->attendee->phone_number); 
+                        $message = urlencode("Selamat {$winner->attendee->name}, Anda terpilih sebagai pemenang doorprize {$winner->prize->name} di acara Jogja Expo 2025. Apakah saudara berkenan untuk melakukan video call?");
+                    @endphp
+                    <a href="https://web.whatsapp.com/send?phone={{ $phone }}&text={{ $message }}" target="_blank"
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold text-sm hover:bg-green-700">
+                        Hubungi via WA
+                    </a>
+                @endif
+            </div>
+        </div>
+    @empty
+        <p class="text-center text-gray-500 py-12">Belum ada pemenang yang diundi.</p>
+    @endforelse
+</div>
 
             <!-- Tab: Riwayat Undian -->
             <div id="riwayat" class="tab-content hidden space-y-3">
