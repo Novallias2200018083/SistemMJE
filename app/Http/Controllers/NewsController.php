@@ -7,14 +7,16 @@ use App\Models\News;
 
 class NewsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $news = News::latest()->paginate(9);
-        return view('public.newslatter', compact('news'));
-    }
+        if ($request->has('all')) {
+            // Ambil semua berita
+            $news = News::latest()->get();
+        } else {
+            // Default ambil 6 dulu saja
+            $news = News::latest()->take(6)->get();
+        }
 
-    public function show(News $news)
-    {
         return view('public.newslatter', compact('news'));
     }
 }
