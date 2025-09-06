@@ -6,6 +6,7 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\NewsController;
 
 // --- Admin Controllers ---
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -19,6 +20,8 @@ use App\Http\Controllers\Admin\TenanController;
 use App\Http\Controllers\Admin\SalesController;
 use App\Http\Controllers\Admin\AdminSaleController;
 use App\Http\Controllers\Admin\TenanExportController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+
 
 // --- Tenant Controllers ---
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
@@ -45,6 +48,9 @@ Route::get('/ticket/{token}/download', [TicketController::class, 'download'])->n
 Route::get('/cek-undian', [PublicController::class, 'lottery'])->name('lottery.check');
 // Route untuk menampilkan form pencarian dan menangani pencarian tiket
 Route::get('/cetak-tiket', [AttendeeController::class, 'showFindForm'])->name('ticket.find');
+// Route untuk portal berita (public)
+Route::get('/portal-berita', [NewsController::class, 'index'])->name('news.index');
+Route::get('/portal-berita/{news}', [NewsController::class, 'show'])->name('news.show');
 
 
 /*
@@ -90,6 +96,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/lottery/draw/{prize}', [LotteryController::class, 'draw'])->name('lottery.draw');
     Route::patch('/lottery/claim/{winner}', [LotteryController::class, 'claim'])->name('lottery.claim');
     Route::resource('/lottery', LotteryController::class)->parameters(['lottery' => 'prize']);
+    // Halaman spin/roulette
+Route::get('/lottery/spin/{prize}', [LotteryController::class, 'showSpinner'])->name('lottery.spin');
+
 
     Route::get('/export/attendance/{day}', [AdminExportController::class, 'attendance'])->name('export.attendance');
     // Ganti rute-rute UserController yang lama dengan ini:
@@ -136,8 +145,13 @@ Route::resource('sales', AdminSaleController::class)->except(['index', 'create',
         Route::get('/summary', 'summary')->name('summary');
     });
 
+// <<<<<<< HEAD
     Route::resource('sales', SalesController::class)->except(['create', 'store', 'index']);
 
+// =======
+    // Rute untuk Manajemen Berita
+    Route::resource('newslatter', AdminNewsController::class);
+// >>>>>>> 36d3bb08c3f4dd7ce06443870a6d166825b8c953
 });
 
 

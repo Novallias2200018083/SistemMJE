@@ -11,6 +11,7 @@ use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\LotteryWinner;
+use App\Models\News;
 
 class PublicController extends Controller
 {
@@ -37,13 +38,18 @@ class PublicController extends Controller
                 ->get();
         }
 
+        // --- Ambil berita terbaru untuk homepage ---
+        $news = News::latest()->get();
+
         return view('public.home', [
             'totalAttendees' => $totalAttendees,
             'totalAttendance' => $totalAttendance,
             'totalSales' => $totalSales,
             'eventsByDay' => $eventsByDay, // Mengirim semua event yang sudah dikelompokkan
             'topTenants' => $topTenants,
+            'news' => $news,
         ]);
+
     }
 
     public function lottery(Request $request)
