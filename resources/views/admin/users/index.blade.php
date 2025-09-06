@@ -76,6 +76,7 @@
                                     </option>
                                 @endforeach
                             </select></div>
+    
                         <div><label for="attendance_status" class="text-sm font-medium">Kehadiran</label><select
                                 name="attendance_status" id="attendance_status"
                                 class="mt-1 w-full border-gray-300 rounded-lg shadow-sm">
@@ -191,6 +192,25 @@
                                     <span class="w-16 text-right font-semibold">{{ $dist->total }}</span>
                                 </div>
                             @endforeach
+                        </div>
+                    </div>
+                    <!-- Distribusi per Kabupaten -->
+                    <div>
+                        <h3 class="font-bold text-lg mb-4">Distribusi Pekerjaan</h3>
+                        <div class="space-y-3">
+                            @forelse ($jobsDistribution as $dist)
+                                <div class="flex items-center">
+                                    <span class="w-1/3 text-gray-600">{{ $dist['job'] }}</span>
+                                    <div class="w-2/3 bg-gray-200 rounded-full h-4">
+                                        <div class="bg-purple-500 h-4 rounded-full text-xs text-white text-right pr-2"
+                                            style="width: {{ $totalAttendees > 0 ? ($dist['total'] / $totalAttendees) * 100 : 0 }}%">
+                                        </div>
+                                    </div>
+                                    <span class="w-16 text-right font-semibold">{{ $dist['total'] }}</span>
+                                </div>
+                            @empty
+                                <p class="text-center text-gray-500">Tidak ada data pekerjaan.</p>
+                            @endforelse
                         </div>
                     </div>
                 </div>

@@ -57,7 +57,21 @@ class UserController extends Controller
             ->groupBy('regency')
             ->orderBy('total', 'desc')
             ->get();
-        
+
+        $jobDistribution = Attendee::select('jobs', DB::raw('count(*) as total'))
+            ->whereNotNull('jobs')
+            ->where('jobs', '!=', '')
+            ->groupBy('jobs')
+            ->orderBy('total', 'desc')
+            ->get();
+            
+        $jobsDistribution = $jobDistribution->map(function($item) {
+            return [
+                'job' => $item->jobs,
+                'total' => $item->total
+            ];
+        });
+
         $ageDistribution = Attendee::select(
                 DB::raw("CASE 
                     WHEN age BETWEEN 8 AND 16 THEN '8-16 tahun'
@@ -78,11 +92,10 @@ class UserController extends Controller
             'totalAttendees',
             'dailyAttendance',
             'regencies',
-            'regencyDistribution', // <-- [PENAMBAHAN] Mengirim data ke view
-            'ageDistribution'    // <-- [PENAMBAHAN] Mengirim data ke view
+            'regencyDistribution',
+            'ageDistribution' ,
+            'jobsDistribution'
         ));
-
-        // $attendees = $query->latest()->paginate(6);
     }
 
     /**
@@ -96,55 +109,53 @@ class UserController extends Controller
     /**
      * Menyimpan pengguna baru ke database.
      */
-    // app/Http/Controllers/Admin/UserController.php
+    public function store(Request $request)
+    {
+        // 1. Validasi input dasar
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'full_address' => 'required|string',
+            'regency' => 'required|string',
+            'other_regency' => 'required_if:regency,Lain-lain|nullable|string|max:255',
+            'phone_number' => 'required|string|min:10|max:15',
+            'age' => 'required|integer|min:1',
+            'jobs' => 'required|string|max:255', // Menambahkan validasi untuk pekerjaan
+        ]);
 
-// app/Http/Controllers/Admin/UserController.php
+        // --- VALIDASI BATAS NOMOR HP DIMULAI DI SINI ---
+        $phoneNumber = $validatedData['phone_number'];
+        $phoneCount = Attendee::where('phone_number', $phoneNumber)->count();
 
-public function store(Request $request)
-{
-    // 1. Validasi input dasar
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'full_address' => 'required|string',
-        'regency' => 'required|string',
-        'other_regency' => 'required_if:regency,Lain-lain|nullable|string|max:255',
-        'phone_number' => 'required|string|min:10|max:15',
-        'age' => 'required|integer|min:1',
-    ]);
+        if ($phoneCount >= 3) {
+            // Jika sudah 3 kali atau lebih, kembalikan ke form dengan pesan error
+            return back()->withErrors([
+                'phone_number' => 'Nomor HP ini telah mencapai batas maksimal pendaftaran (3 kali).'
+            ])->withInput(); // withInput() agar data yang sudah diisi tidak hilang
+        }
+        // --- VALIDASI BATAS NOMOR HP SELESAI ---
 
-    // --- VALIDASI BATAS NOMOR HP DIMULAI DI SINI ---
-    $phoneNumber = $validatedData['phone_number'];
-    $phoneCount = Attendee::where('phone_number', $phoneNumber)->count();
+        // Tentukan nilai regency yang akan disimpan
+        $regencyToStore = $validatedData['regency'] === 'Lain-lain' 
+            ? $validatedData['other_regency'] 
+            : $validatedData['regency'];
 
-    if ($phoneCount >= 3) {
-        // Jika sudah 3 kali atau lebih, kembalikan ke form dengan pesan error
-        return back()->withErrors([
-            'phone_number' => 'Nomor HP ini telah mencapai batas maksimal pendaftaran (3 kali).'
-        ])->withInput(); // withInput() agar data yang sudah diisi tidak hilang
+        // Buat Attendee dengan token sementara
+        $attendee = Attendee::create([
+            'name' => $validatedData['name'],
+            'full_address' => $validatedData['full_address'],
+            'regency' => $regencyToStore,
+            'phone_number' => $validatedData['phone_number'],
+            'age' => $validatedData['age'],
+            'jobs' => $validatedData['jobs'], // Menyimpan data pekerjaan
+            'token' => 'PENDING',
+        ]);
+
+        // Hasilkan dan update token yang benar
+        $token = 'MJE-' . str_pad($attendee->id, 7, '0', STR_PAD_LEFT);
+        $attendee->update(['token' => $token]);
+
+        return redirect()->route('admin.users.index')->with('success', 'Peserta baru berhasil ditambahkan.');
     }
-    // --- VALIDASI BATAS NOMOR HP SELESAI ---
-
-    // Tentukan nilai regency yang akan disimpan
-    $regencyToStore = $validatedData['regency'] === 'Lain-lain' 
-        ? $validatedData['other_regency'] 
-        : $validatedData['regency'];
-
-    // Buat Attendee dengan token sementara
-    $attendee = Attendee::create([
-        'name' => $validatedData['name'],
-        'full_address' => $validatedData['full_address'],
-        'regency' => $regencyToStore,
-        'phone_number' => $validatedData['phone_number'],
-        'age' => $validatedData['age'],
-        'token' => 'PENDING',
-    ]);
-
-    // Hasilkan dan update token yang benar
-    $token = 'MJE-' . str_pad($attendee->id, 7, '0', STR_PAD_LEFT);
-    $attendee->update(['token' => $token]);
-
-    return redirect()->route('admin.users.index')->with('success', 'Peserta baru berhasil ditambahkan.');
-}
 
     /**
      * Menampilkan form untuk mengedit pengguna.
@@ -157,30 +168,34 @@ public function store(Request $request)
     /**
      * Memperbarui data pengguna di database.
      */
-    public function update(Request $request, Attendee $user) // Variabel $user kita ganti jadi $attendee untuk konsistensi
-{
-    $attendee = $user; // Alias
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'full_address' => 'required|string',
-        'regency' => 'required|string',
-        'other_regency' => 'required_if:regency,Lain-lain|nullable|string|max:255',
-        'phone_number' => 'required|string|min:10|max:15',
-        'age' => 'required|integer|min:1',
-    ]);
+    public function update(Request $request, Attendee $user)
+    {
+        $attendee = $user; // Alias
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'full_address' => 'required|string',
+            'regency' => 'required|string',
+            'other_regency' => 'required_if:regency,Lain-lain|nullable|string|max:255',
+            'phone_number' => 'required|string|min:10|max:15',
+            'age' => 'required|integer|min:1',
+            'jobs' => 'required|string|max:255', // Menambahkan validasi untuk pekerjaan
+        ]);
 
-    $regencyToStore = $validatedData['regency'] === 'Lain-lain' 
-        ? $validatedData['other_regency'] 
-        : $validatedData['regency'];
-    
-    // Hapus other_regency dari array agar tidak coba disimpan ke database
-    unset($validatedData['other_regency']);
-    $validatedData['regency'] = $regencyToStore;
+        $regencyToStore = $validatedData['regency'] === 'Lain-lain' 
+            ? $validatedData['other_regency'] 
+            : $validatedData['regency'];
+        
+        // Hapus other_regency dari array agar tidak coba disimpan ke database
+        unset($validatedData['other_regency']);
+        $validatedData['regency'] = $regencyToStore;
+        
+        // Menambahkan data pekerjaan yang divalidasi ke array data
+        $validatedData['jobs'] = $request->jobs;
 
-    $attendee->update($validatedData);
+        $attendee->update($validatedData);
 
-    return redirect()->route('admin.users.index')->with('success', 'Data peserta berhasil diperbarui.');
-}
+        return redirect()->route('admin.users.index')->with('success', 'Data peserta berhasil diperbarui.');
+    }
 
     /**
      * Menghapus data pengguna dari database.

@@ -54,6 +54,30 @@
                         <option value="Lain-lain" {{ old('regency') == 'Lain-lain' ? 'selected' : '' }}>Lain-lain</option>
                     </select>
                 </div>
+
+                <!-- Updated "Pekerjaan" field -->
+                <div>
+                    <label for="jobs_select" class="block text-sm font-medium text-gray-700 mb-1">Pekerjaan
+                        <span class="text-red-500">*</span></label>
+                    <select id="jobs_select" name="jobs" required
+                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500">
+                        <option value="" disabled selected>Pilih Pekerjaan</option>
+                        <option value="Pelajar/Mahasiswa">Pelajar/Mahasiswa</option>
+                        <option value="Pegawai Negeri Sipil/PNS">Pegawai Negeri Sipil/PNS</option>
+                        <option value="Wiraswasta">Wiraswasta</option>
+                        <option value="Wirausaha">Wirausaha</option>
+                        <option value="Karyawan Swasta">Karyawan Swasta</option>
+                        <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                        <option value="Tenaga Medis">Tenaga Medis</option>
+                        <option value="TNI/Polri">TNI/Polri</option>
+                        <option value="Guru/Dosen">Guru/Dosen</option>
+                        <option value="Petani">Petani</option>
+                        <option value="Nelayan">Nelayan</option>
+                        <option value="Buruh">Buruh</option>
+                    </select>
+                </div>
+                <!-- End of updated "Pekerjaan" field -->
+
                 <div id="other_regency_wrapper" class="hidden">
                     <label for="other_regency" class="block text-sm font-medium text-gray-700">Masukkan Nama Kabupaten/Kota</label>
                     <input id="other_regency" name="other_regency" type="text" value="{{ old('other_regency') }}" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500" />

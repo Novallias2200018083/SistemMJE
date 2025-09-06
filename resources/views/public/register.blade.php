@@ -338,6 +338,48 @@
                                 placeholder="Masukkan nama lengkap Anda" required autofocus
                                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500" />
                         </div>
+                        {{-- Update Pekerjaan --}}
+                        <div>
+                            <label for="jobs_select" class="block text-sm font-medium text-gray-700 mb-1">Pekerjaan
+                                <span class="text-red-500">*</span></label>
+                            <select id="jobs_select" name="jobs" required
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500">
+                                <option value="" disabled selected>Pilih Pekerjaan</option>
+                                <option value="Pelajar/Mahasiswa"
+                                    {{ old('jobs') == 'Pelajar/Mahasiswa' ? 'selected' : '' }}>Pelajar/Mahasiswa
+                                </option>
+                                <option value="Pegawai Negeri Sipil/PNS"
+                                    {{ old('jobs') == 'Pegawai Negeri Sipil/PNS' ? 'selected' : '' }}>Pegawai Negeri
+                                    Sipil/PNS
+                                </option>
+                                <option value="Wiraswasta" {{ old('jobs') == 'Wiraswasta' ? 'selected' : '' }}>
+                                    Wiraswasta
+                                </option>
+                                <option value="Wirausaha" {{ old('jobs') == 'Wirausaha' ? 'selected' : '' }}>Wirausaha
+                                </option>
+                                <option value="Karyawan Swasta"
+                                    {{ old('jobs') == 'Karyawan Swasta' ? 'selected' : '' }}>Karyawan Swasta
+                                </option>
+                                <option value="Ibu Rumah Tangga"
+                                    {{ old('jobs') == 'Ibu Rumah Tangga' ? 'selected' : '' }}>Ibu Rumah Tangga
+                                </option>
+                                <option value="Tenaga Medis" {{ old('jobs') == 'Tenaga Medis' ? 'selected' : '' }}>
+                                    Tenaga Medis
+                                </option>
+                                <option value="TNI/Polri" {{ old('jobs') == 'TNI/Polri' ? 'selected' : '' }}>TNI/Polri
+                                </option>
+                                <option value="Guru/Dosen" {{ old('jobs') == 'Guru/Dosen' ? 'selected' : '' }}>
+                                    Guru/Dosen
+                                </option>
+                                <option value="Petani" {{ old('jobs') == 'Petani' ? 'selected' : '' }}>Petani
+                                </option>
+                                <option value="Nelayan" {{ old('jobs') == 'Nelayan' ? 'selected' : '' }}>Nelayan
+                                </option>
+                                <option value="Kabupaten Gunungkidul" {{ old('jobs') == 'Buruh' ? 'selected' : '' }}>
+                                    Buruh
+                                    Gunungkidul</option>
+                            </select>
+                        </div>
                         <div>
                             <label for="full_address" class="block text-sm font-medium text-gray-700 mb-1">Alamat
                                 Lengkap <span class="text-red-500">*</span></label>
