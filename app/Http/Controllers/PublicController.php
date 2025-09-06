@@ -26,7 +26,7 @@ class PublicController extends Controller
 
         // --- Tenan Terlaris per Kategori ---
         $topTenants = [];
-        $categories = ['makanan', 'multi_produk', 'ranting'];
+        $categories = ['makanan', 'multi_produk', 'pcr'];
         foreach ($categories as $category) {
             $topTenants[$category] = Tenant::where('category', $category)
                 ->join('sales', 'tenants.id', '=', 'sales.tenant_id')

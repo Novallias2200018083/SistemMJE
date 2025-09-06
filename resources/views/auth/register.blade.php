@@ -102,7 +102,7 @@
                                 <select id="category" name="category" required class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500">
                                     <option value="makanan">Makanan</option>
                                     <option value="multi_produk">Multi Produk</option>
-                                    <option value="ranting">Ranting</option>
+                                    <option value="pcr">LPCR</option>
                                 </select>
                             </div>
                             <div>

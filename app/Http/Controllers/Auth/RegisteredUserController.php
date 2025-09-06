@@ -32,8 +32,8 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'tenant_name' => ['required', 'string', 'max:255'], // <-- Tambahkan ini
-            'category' => ['required', 'string', 'in:makanan,multi_produk,ranting'], // <-- Tambahkan ini
+            'tenant_name' => ['required', 'string', 'max:255', 'unique:tenants,tenant_name'],
+            'category' => ['required', 'string', 'in:makanan,multi_produk,pcr'], // <-- Tambahkan ini
             'phone_number' => ['required', 'string', 'max:15'], // <-- Tambahkan ini
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],

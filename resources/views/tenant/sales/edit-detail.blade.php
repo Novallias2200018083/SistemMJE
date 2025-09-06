@@ -1,75 +1,46 @@
 <x-tenant-layout>
     <div class="max-w-4xl mx-auto">
-        <a href="{{ route('tenant.sales.index') }}" class="text-gray-600 hover:text-gray-900 font-semibold mb-6 inline-block"><i class="fa-solid fa-arrow-left mr-2"></i>Kembali ke Pilihan Input</a>
+        <a href="{{ route('tenant.sales.history') }}" class="text-gray-600 hover:text-gray-900 font-semibold mb-6 inline-block"><i class="fa-solid fa-arrow-left mr-2"></i>Batal & Kembali ke Riwayat</a>
         
-        {{-- Menampilkan Pesan Error Validasi --}}
         @if ($errors->any())
-            <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
-                <div class="font-bold">Oops! Ada beberapa kesalahan:</div>
-                <ul class="list-disc list-inside mt-2">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+            {{-- ... Blok error ... --}}
         @endif
 
-        <form id="detail-sale-form" action="{{ route('tenant.sales.store_detail') }}" method="POST" enctype="multipart/form-data">
+        <form id="edit-sale-form" action="{{ route('tenant.sales.update', $sale) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
             <div class="bg-white p-8 rounded-lg shadow-sm">
-                <div class="text-center">
-                    <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4"><i class="fa-solid fa-file-invoice-dollar text-3xl text-gray-500"></i></div>
-                    <h2 class="text-2xl font-bold text-gray-800">Input Detail Penjualan</h2>
-                    <p class="text-gray-500 mt-2">Catat setiap transaksi untuk laporan yang lebih akurat.</p>
-                </div>
-
-                <div class="mt-8 border-t pt-8">
-                    {{-- Input Hari Penjualan --}}
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Edit Transaksi #{{ $sale->tenant_sale_id }}</h2>
+                
+                {{-- Form Content (mirip create-detail, tapi dengan value) --}}
+                <div class="border-t pt-8">
                     <div class="mb-6">
-                        <label for="day_detail" class="block text-sm font-medium text-gray-700">Hari Penjualan</label>
-                        <select name="day" id="day_detail" class="mt-1 w-full md:w-1/3 border-gray-300 rounded-lg" required>
-                            <option value="1" {{ old('day', 1) == 1 ? 'selected' : '' }}>Hari 1 (12 Sep 2025)</option>
-                            <option value="2" {{ old('day') == 2 ? 'selected' : '' }}>Hari 2 (13 Sep 2025)</option>
-                            <option value="3" {{ old('day') == 3 ? 'selected' : '' }}>Hari 3 (14 Sep 2025)</option>
+                        <label for="day_detail" class="block text-sm font-medium">Hari Penjualan</label>
+                        <select name="day" id="day_detail" class="mt-1 w-full md:w-1/3 rounded-lg" required>
+                            <option value="1" {{ old('day', $day) == 1 ? 'selected' : '' }}>Hari 1</option>
+                            <option value="2" {{ old('day', $day) == 2 ? 'selected' : '' }}>Hari 2</option>
+                            <option value="3" {{ old('day', $day) == 3 ? 'selected' : '' }}>Hari 3</option>
                         </select>
                     </div>
 
-                    {{-- Kontainer untuk Item Penjualan --}}
                     <h3 class="font-semibold text-lg mb-4">Item Penjualan</h3>
                     <div id="product-rows" class="space-y-4">
-                        {{-- 1. REPOPULASI FORM OTOMATIS JIKA VALIDASI GAGAL --}}
-                        @if(old('products'))
-                            @foreach(old('products') as $index => $product)
-                                <div class="grid grid-cols-12 gap-3 items-center product-row">
-                                    <div class="col-span-5"><input type="text" name="products[{{ $index }}][name]" value="{{ $product['name'] ?? '' }}" placeholder="Nama Produk" class="w-full border-gray-300 rounded-lg" required></div>
-                                    <div class="col-span-2"><input type="number" name="products[{{ $index }}][quantity]" value="{{ $product['quantity'] ?? '' }}" placeholder="Jml" class="w-full border-gray-300 rounded-lg quantity" required></div>
-                                    <div class="col-span-3"><input type="number" name="products[{{ $index }}][price]" value="{{ $product['price'] ?? '' }}" placeholder="Harga Satuan" class="w-full border-gray-300 rounded-lg price" required></div>
-                                    <div class="col-span-1"><p class="text-sm font-semibold text-right row-total">Rp 0</p></div>
-                                    <div class="col-span-1 text-right"><button type="button" class="text-red-500 hover:text-red-700 remove-row"><i class="fa-solid fa-trash"></i></button></div>
-                                </div>
-                            @endforeach
-                        @endif
+                        @foreach(old('products', $sale->details) as $index => $item)
+                             <div class="grid grid-cols-12 gap-3 items-center product-row">
+                                <div class="col-span-5"><input type="text" name="products[{{$index}}][name]" value="{{ $item['product_name'] ?? $item['name'] }}" placeholder="Nama Produk" class="w-full rounded-lg" required></div>
+                                <div class="col-span-2"><input type="number" name="products[{{$index}}][quantity]" value="{{ $item['quantity'] }}" placeholder="Jml" class="w-full rounded-lg quantity" required></div>
+                                <div class="col-span-3"><input type="number" name="products[{{$index}}][price]" value="{{ $item['price'] }}" placeholder="Harga Satuan" class="w-full rounded-lg price" required></div>
+                                <div class="col-span-1"><p class="text-sm font-semibold text-right row-total">Rp 0</p></div>
+                                <div class="col-span-1 text-right"><button type="button" class="text-red-500 remove-row"><i class="fa-solid fa-trash"></i></button></div>
+                            </div>
+                        @endforeach
                     </div>
-                    <button type="button" id="add-row" class="mt-4 px-4 py-2 border border-dashed rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100"><i class="fa-solid fa-plus mr-2"></i>Tambah Item</button>
+                    <button type="button" id="add-row" class="mt-4 text-sm font-semibold"><i class="fa-solid fa-plus mr-2"></i>Tambah Item</button>
                 </div>
 
-                {{-- Input Bukti Transaksi dengan Preview --}}
-                <div class="mt-6 bg-gray-50 p-6 rounded-lg">
-                    <label for="image_detail" class="block text-sm font-medium text-gray-700">Upload Bukti Transaksi (Opsional)</label>
-                    <div class="mt-2">
-                        <input type="file" name="image" id="image_detail" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100">
-                    </div>
-                    {{-- 3. AREA PREVIEW GAMBAR --}}
-                    <img id="image-preview" src="#" alt="Preview Gambar" class="mt-4 rounded-lg shadow-sm max-h-48 hidden"/>
-                </div>
-
-                {{-- Total & Tombol Simpan --}}
-                <div class="mt-8 border-t pt-6 flex justify-end items-center space-x-4">
-                    <div>
-                        <span class="text-gray-500">Total Keseluruhan:</span>
-                        <span id="grand-total" class="font-bold text-xl">Rp 0</span>
-                    </div>
-                    <button id="submit-button" type="submit" class="px-6 py-2 bg-gray-800 text-white rounded-lg font-semibold w-52 text-center">Simpan Detail</button>
+                {{-- ... Bagian Upload Gambar (dengan preview gambar lama) & Tombol Simpan ... --}}
+                <div class="mt-8 border-t pt-6 flex justify-end">
+                    <button id="submit-button" type="submit" class="px-6 py-2 bg-gray-800 text-white rounded-lg font-semibold">Update Transaksi</button>
                 </div>
             </div>
         </form>
@@ -99,7 +70,7 @@
             const rowTemplate = document.getElementById('product-row-template');
             
             // Inisialisasi rowIndex berdasarkan baris yang sudah ada (dari old input)
-            let rowIndex = {{ count(old('products', [])) }};
+            let rowIndex = {{ count(old('products', $sale->details)) }};
 
             // 2. FUNGSI-FUNGSI UTAMA (LEBIH TERSTRUKTUR)
             const addProductRow = () => {

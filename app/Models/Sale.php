@@ -6,12 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
-// ...
 class Sale extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'tenant_id',
+        'tenant_sale_id',
+        'amount',
+        'sale_date',
+        'image',
+    ];
 
     /**
      * Get the tenant that owns the sale.

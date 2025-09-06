@@ -16,12 +16,18 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ExportController as AdminExportController;
 use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\TenanController;
+use App\Http\Controllers\Admin\SalesController;
+use App\Http\Controllers\Admin\AdminSaleController;
 use App\Http\Controllers\Admin\TenanExportController;
 
 // --- Tenant Controllers ---
 use App\Http\Controllers\Tenant\DashboardController as TenantDashboardController;
 use App\Http\Controllers\Tenant\SaleController;
 use App\Models\Tenant;
+
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +118,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/attendance/day/{day}', 'attendanceByDay')->name('attendance.by_day');
     });
 
+    // Routes baru untuk mengelola transaksi penjualan (mirip seperti SaleController)
+Route::resource('sales', AdminSaleController::class)->except(['index', 'create', 'store']);
+
     // Rute untuk Manajemen Tenan
     Route::resource('/tenan', TenanController::class);
 
@@ -126,6 +135,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/daily', 'daily')->name('daily');
         Route::get('/summary', 'summary')->name('summary');
     });
+
+    Route::resource('sales', SalesController::class)->except(['create', 'store', 'index']);
+
 });
 
 
@@ -147,8 +159,71 @@ Route::middleware(['auth', 'role:tenant'])->prefix('tenant')->name('tenant.')->g
     // TAMBAHKAN ROUTE INI
     Route::get('/sales/history', [SaleController::class, 'history'])->name('sales.history');
     Route::get('/sales/export', [SaleController::class, 'export'])->name('sales.export'); // <-- TAMBAHKAN INI
+
+     // ===== TAMBAHKAN ROUTE BARU DI BAWAH INI =====
+    Route::get('/sales/{sale}', [SaleController::class, 'show'])->name('sales.show');
+    Route::get('/sales/{sale}/edit', [SaleController::class, 'edit'])->name('sales.edit');
+    Route::put('/sales/{sale}', [SaleController::class, 'update'])->name('sales.update');
+    Route::delete('/sales/{sale}', [SaleController::class, 'destroy'])->name('sales.destroy');
 });
 
+// ===== TES FINAL: PAKSA KONFIGURASI LARAVEL =====
+Route::get('/laravel-db-test', function () {
+    try {
+        // Langkah 1: Hapus cache config secara paksa di awal request
+        Artisan::call('config:clear');
+
+        // Langkah 2: Timpa konfigurasi database secara manual HANYA untuk request ini
+        Config::set('database.connections.mysql.database', 'sistemmjediy');
+
+        // Langkah 3: Paksa Laravel untuk membuat koneksi baru dengan config yang benar
+        DB::purge('mysql');
+        DB::reconnect('mysql');
+
+        // Langkah 4: Sekarang jalankan query menggunakan DB facade Laravel
+        $results = DB::table('sales')->where('tenant_id', 1)->get();
+
+        // Tampilkan hasilnya
+        echo "<h1>Tes Koneksi via Laravel DB Facade</h1>";
+        echo "<b>Database yang digunakan secara paksa:</b> " . DB::getDatabaseName() . "<br><br>";
+
+        if ($results->isEmpty()) {
+            echo "<b>Hasil:</b> Gagal mengambil data, collection kosong. Masalah masih ada di tempat lain.";
+        } else {
+            echo "<b>Hasil:</b> BERHASIL! Data ditemukan.<br>";
+            echo "<pre>";
+            print_r($results->toArray());
+            echo "</pre>";
+        }
+
+    } catch (\Exception $e) {
+        echo "<h1>KONEKSI VIA LARAVEL GAGAL</h1>";
+        echo "<p>" . $e->getMessage() . "</p>";
+    }
+});
+
+Route::middleware(['auth', 'verified', 'role:admin']) // <-- GANTI INI AGAR SAMA DENGAN ROUTE ADMIN ANDA
+    ->group(function () {
+    
+    Route::get('/middleware-test', function () {
+        echo "<h1>Tes di dalam Middleware Admin</h1>";
+        try {
+            $salesData = DB::select('SELECT * FROM sales WHERE tenant_id = ?', [1]);
+
+            if (empty($salesData)) {
+                echo "Hasil: KOSONG. Middleware adalah penyebabnya.";
+            } else {
+                echo "Hasil: MUNCUL. Ini sangat aneh.";
+                echo "<pre>";
+                print_r($salesData);
+                echo "</pre>";
+            }
+        } catch (\Exception $e) {
+            echo "Query Gagal: " . $e->getMessage();
+        }
+    });
+
+});
 
 // Memuat rute-rute autentikasi (login, register, logout, dll.)
 require __DIR__ . '/auth.php';

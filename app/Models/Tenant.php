@@ -20,6 +20,7 @@ class Tenant extends Model
         'target_day_1',
         'target_day_2',
         'target_day_3',
+        'sales_input_method',
     ];
 
     protected $guarded = []; // Atau definisikan $fillable

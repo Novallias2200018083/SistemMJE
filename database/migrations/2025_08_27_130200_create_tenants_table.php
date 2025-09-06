@@ -14,7 +14,7 @@ return new class extends Migration
             // Menghubungkan ke tabel users
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('tenant_name');
-            $table->enum('category', ['makanan', 'multi_produk', 'ranting']);
+            $table->enum('category', ['makanan', 'multi_produk', 'pcr']);
             $table->string('phone_number')->nullable();
             $table->timestamps();
         });

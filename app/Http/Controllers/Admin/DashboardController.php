@@ -65,7 +65,7 @@ class DashboardController extends Controller
         
         // --- Tenan Terlaris per Kategori (Dinamis berdasarkan hari yang dipilih) ---
         $topTenants = [];
-        $categories = ['makanan', 'multi_produk', 'ranting']; // Sesuaikan kategori Anda
+        $categories = ['makanan', 'multi_produk', 'pcr']; // Sesuaikan kategori Anda
         foreach ($categories as $category) {
             $tenantsQuery = Tenant::where('category', $category);
 

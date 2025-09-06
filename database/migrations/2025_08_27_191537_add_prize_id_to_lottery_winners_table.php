@@ -24,7 +24,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('lottery_winners', function (Blueprint $table) {
-            //
-        });
+        // 1. Hapus foreign key constraint terlebih dahulu
+        $table->dropForeign(['prize_id']);
+
+        // 2. Baru hapus kolomnya
+        $table->dropColumn('prize_id');
+    });
     }
 };
