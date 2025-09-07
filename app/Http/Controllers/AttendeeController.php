@@ -14,31 +14,26 @@ class AttendeeController extends Controller
         return view('public.register');
     }
 
-    // Menyimpan data pendaftaran
+     // Menyimpan data pendaftaran
     public function store(Request $request)
     {
-        // 1. Validasi Input (Tetap sama)
+        // 1. Validasi Input
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'full_address' => 'required|string',
             'regency' => 'required|string',
-            'other_regency' => 'nullable|string|max:100', // Tambahkan validasi untuk regency lain
+            'other_regency' => 'nullable|string|max:100',
             'phone_number' => 'required|string|min:10|max:15',
             'age' => 'required|integer|min:1',
+            'jobs' => 'required|string|max:255', // Menambahkan validasi untuk 'jobs'
         ]);
 
         // --- MULAI LOGIKA PENGECEKAN NOMOR HP ---
         
-        // Ambil nomor HP dari data yang sudah divalidasi
         $phoneNumber = $validatedData['phone_number'];
-
-        // Hitung berapa kali nomor HP ini sudah ada di database
         $phoneCount = Attendee::where('phone_number', $phoneNumber)->count();
 
-        // Jika nomor HP sudah terdaftar 3 kali atau lebih
         if ($phoneCount >= 3) {
-            // Hentikan proses dan kembalikan ke halaman form dengan pesan error
-            // withInput() akan menjaga data yang sudah diisi pengguna agar tidak hilang
             return back()->withErrors([
                 'phone_number' => 'Pendaftaran gagal. Nomor HP ini telah mencapai batas maksimal pendaftaran (3 kali).'
             ])->withInput();
@@ -52,13 +47,14 @@ class AttendeeController extends Controller
             $regency = $validatedData['other_regency'];
         }
 
-        // 2. Jika lolos pengecekan, baru buat data peserta
+        // 2. Buat data peserta termasuk data 'jobs'
         $attendee = Attendee::create([
             'name' => $validatedData['name'],
             'full_address' => $validatedData['full_address'],
             'regency' => $regency,
             'phone_number' => $validatedData['phone_number'],
             'age' => $validatedData['age'],
+            'jobs' => $validatedData['jobs'], // Menyimpan data pekerjaan
             'token' => 'PENDING', // Token sementara
         ]);
 

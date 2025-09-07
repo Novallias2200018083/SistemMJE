@@ -17,7 +17,7 @@ class AttendeesExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            'Token', 'Nama', 'Alamat', 'Kabupaten', 'No HP', 'Usia',
+            'Token', 'Nama', 'Alamat', 'Pekerjaan', 'Kabupaten', 'No HP', 'Usia',
             'Hadir Hari 1', 'Hadir Hari 2', 'Hadir Hari 3', 'Total Kehadiran'
         ];
     }
@@ -28,6 +28,7 @@ class AttendeesExport implements FromCollection, WithHeadings, WithMapping
             $attendee->token,
             $attendee->name,
             $attendee->full_address,
+            $attendee->jobs,
             $attendee->regency,
             $attendee->phone_number,
             $attendee->age,

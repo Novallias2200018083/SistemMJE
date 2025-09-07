@@ -431,21 +431,21 @@
                     <li class="event-time p-3 rounded-lg">
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Hari 1</span>
-                            <span class="font-bold text-amber-400">08:00 - 17:00</span>
+                            <span class="font-bold text-amber-400">08:00 - 22:00</span>
                         </div>
                         <p class="text-xs mt-1 text-gray-400">Pembukaan & Seminar Utama</p>
                     </li>
                     <li class="event-time p-3 rounded-lg">
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Hari 2</span>
-                            <span class="font-bold text-amber-400">08:00 - 17:00</span>
+                            <span class="font-bold text-amber-400">08:00 - 22:00</span>
                         </div>
                         <p class="text-xs mt-1 text-gray-400">Workshop & Pameran</p>
                     </li>
                     <li class="event-time p-3 rounded-lg">
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Hari 3</span>
-                            <span class="font-bold text-amber-400">08:00 - 16:00</span>
+                            <span class="font-bold text-amber-400">08:00 - 22:00</span>
                         </div>
                         <p class="text-xs mt-1 text-gray-400">Networking & Penutupan</p>
                     </li>

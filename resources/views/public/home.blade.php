@@ -573,9 +573,213 @@
                             <i class="fa-solid fa-user-plus mr-3"></i>
                             Daftar Sekarang
                         </a>
+
                         <a href="{{ route('login') }}" class="w-full sm:w-auto bg-transparent border-2 border-white/80 text-white font-bold py-4 px-8 rounded-xl hover:bg-white/10 hover:border-white transition-all duration-300 flex items-center justify-center">
                             <i class="fa-solid fa-store mr-3"></i>
                             Jadi Tenan
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- {{-- Data Event --}}
+            <section class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 my-16">
+                <div class="stats-card border-sky-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">
+                                {{ number_format($totalAttendees, 0, ',', '.') }}
+                            </p>
+                            <p class="text-gray-600 mt-2 font-medium">Total Peserta Terdaftar</p>
+                        </div>
+                        <i class="fa-solid fa-users text-3xl sm:text-4xl text-sky-500"></i>
+                    </div>
+                </div>
+
+                <div class="stats-card border-blue-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">
+                                {{ number_format($totalAttendance, 0, ',', '.') }}
+                            </p>
+                            <p class="text-gray-600 mt-2 font-medium">Total Kehadiran</p>
+                        </div>
+                        <i class="fa-solid fa-calendar-day text-3xl sm:text-4xl text-blue-500"></i>
+                    </div>
+                </div>
+
+                <div class="stats-card border-orange-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">
+                                {{ number_format($totalSales, 0, ',', '.') }}
+                            </p>
+                            <p class="text-gray-600 mt-2 font-medium">Total Penjualan</p>
+                        </div>
+                        <i class="fa-solid fa-chart-line text-3xl sm:text-4xl text-orange-500"></i>
+                    </div>
+                </div>
+
+                <div class="stats-card border-purple-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">3</p>
+                            <p class="text-gray-600 mt-2 font-medium">Hari Event</p>
+                        </div>
+                        <i class="fa-solid fa-award text-3xl sm:text-4xl text-purple-500"></i>
+                    </div>
+                </div>
+            </section> -->
+
+            <section class="bg-white p-10 rounded-3xl shadow-xl my-16">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-4xl font-bold text-gray-800">Jadwal Acara</h2>
+                    <span
+                        class="bg-gradient-to-r from-sky-100 to-blue-100 text-sky-700 font-semibold px-6 py-3 rounded-xl border border-sky-200">3
+                        Hari Event</span>
+                </div>
+                <div class="space-y-10">
+                    @for ($i = 1; $i <= 3; $i++)
+                        @php $eventsThisDay = $eventsByDay->get($i, collect()); @endphp
+                        <div class="schedule-day p-6 rounded-2xl">
+                            <h3 class="text-2xl font-bold text-sky-600 mb-6 flex items-center">
+                                <i class="fa-solid fa-calendar-day mr-3 text-3xl"></i>
+                                Hari {{ $i }} - Event Day {{ $i }}
+                            </h3>
+                            @forelse($eventsThisDay->take(3) as $event)
+                                <div class="event-card p-6 rounded-xl mb-4 border border-gray-200">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <p class="font-bold text-lg text-gray-800 mb-2">{{ $event->title }}</p>
+                                            <p class="text-gray-600 mb-4">{{ $event->description }}</p>
+                                            <div class="flex items-center space-x-6 text-sm text-gray-500">
+                                                <span class="flex items-center bg-white px-3 py-2 rounded-lg border">
+                                                    <i class="fa-regular fa-clock mr-2 text-sky-500"></i>
+                                                    {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }} -
+                                                    {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
+                                                </span>
+                                                <span class="flex items-center bg-white px-3 py-2 rounded-lg border">
+                                                    <i class="fa-solid fa-location-dot mr-2 text-red-500"></i>
+                                                    {{ $event->location }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="text-sm font-semibold bg-sky-500 text-white px-4 py-2 rounded-full ml-4">Hari
+                                            {{ $i }}</span>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center py-8">
+                                    <i class="fa-solid fa-calendar-xmark text-4xl text-gray-300 mb-4"></i>
+                                    <p class="text-gray-500">Jadwal untuk hari ke-{{ $i }} akan segera
+                                        diumumkan.</p>
+                                </div>
+                            @endforelse
+
+                            @if ($eventsThisDay->count() > 3)
+                                <div class="text-center mt-6">
+                                    <button
+                                        class="show-more-btn px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg"
+                                        data-day="{{ $i }}"
+                                        data-title="Rundown Lengkap Hari {{ $i }}">
+                                        Lihat Lebih Banyak <i class="fa-solid fa-chevron-down ml-2"></i>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    @endfor
+                </div>
+            </section>
+
+            {{-- Tenant Terlaris --}}
+            <section class="my-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Tenan Terlaris</h2>
+                    <p class="text-lg sm:text-xl text-gray-600">Tenan dengan performa terbaik di expo ini</p>
+                </div>
+
+                <!-- Grid responsif -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    @foreach ($topTenants as $category => $tenants)
+                        <div class="tenant-card p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
+                            <div class="text-center mb-6">
+                                <h3
+                                    class="text-xl sm:text-2xl font-bold mb-2 capitalize flex items-center justify-center">
+                                    <i class="fa-solid fa-star text-amber-400 mr-2 sm:mr-3 text-lg sm:text-2xl"></i>
+                                    {{ str_replace('_', ' ', $category) }}
+                                </h3>
+                                <p class="text-gray-500 text-sm sm:text-base">Tenan dengan penjualan tertinggi</p>
+                            </div>
+
+                            <ul class="space-y-3 sm:space-y-4">
+                                @forelse($tenants as $index => $tenant)
+                                    <li
+                                        class="flex justify-between items-center p-3 sm:p-4 rounded-xl 
+                            {{ $index == 0
+                                ? 'bg-gradient-to-r from-amber-50 to-yellow-50 border-l-4 border-amber-400'
+                                : ($index == 1
+                                    ? 'bg-gradient-to-r from-gray-50 to-slate-50 border-l-4 border-gray-400'
+                                    : 'bg-gradient-to-r from-orange-50 to-red-50 border-l-4 border-orange-400') }}">
+                                        <div class="flex items-center">
+                                            <span
+                                                class="{{ $index == 0 ? 'bg-amber-400 text-white' : ($index == 1 ? 'bg-gray-400 text-white' : 'bg-orange-400 text-white') }} rounded-full w-7 h-7 sm:w-8 sm:h-8 inline-flex items-center justify-center mr-3 sm:mr-4 font-bold text-xs sm:text-sm">
+                                                {{ $index + 1 }}
+                                            </span>
+                                            <span class="font-semibold text-gray-800 text-sm sm:text-base">
+                                                {{ $tenant->tenant_name }}
+                                            </span>
+                                        </div>
+                                        <span class="font-bold text-gray-700 text-sm sm:text-base">
+                                            {{ number_format($tenant->total_sales, 0, ',', '.') }}
+                                        </span>
+                                    </li>
+                                @empty
+                                    <li class="text-center py-6">
+                                        <i class="fa-solid fa-chart-line text-2xl sm:text-3xl text-gray-300 mb-2"></i>
+                                        <p class="text-gray-400 text-sm sm:text-base">Belum ada data penjualan.</p>
+                                    </li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
+            {{-- banner action --}}
+            <section
+                class="cta-gradient text-white px-6 py-12 sm:px-10 md:px-16 md:py-20 rounded-3xl shadow-2xl my-16 text-center relative overflow-hidden">
+
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black opacity-20"></div>
+
+                <div class="relative z-10">
+                    <!-- Judul -->
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                        Bergabunglah dengan Event Terbesar Tahun Ini!
+                    </h2>
+
+                    <!-- Deskripsi -->
+                    <p class="text-base sm:text-lg md:text-xl opacity-90 mb-8 max-w-3xl mx-auto leading-relaxed">
+                        Daftarkan diri Anda sekarang untuk mendapatkan akses ke seluruh acara, kesempatan memenangkan
+                        doorprize menarik, dan pengalaman tak terlupakan.
+                    </p>
+
+                    <!-- Tombol -->
+                    <div
+                        class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                        <a href="{{ route('event.register.form') }}"
+                            class="bg-amber-500 hover:bg-amber-400 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 
+                       rounded-xl transition-all duration-300 shadow-lg flex items-center text-sm sm:text-base">
+                            <i class="fa-solid fa-calendar-check mr-2 sm:mr-3"></i>
+                            Daftar Event Gratis
+                        </a>
+                        <a href="#"
+                            class="bg-white hover:bg-gray-100 text-gray-900 font-bold py-3 sm:py-4 px-6 sm:px-8 
+                       rounded-xl transition-all duration-300 shadow-lg flex items-center text-sm sm:text-base">
+                            <i class="fa-solid fa-download mr-2 sm:mr-3"></i>
+                            Download Tiket
+>>>>>>> 5d2c7248dd8fd8d3a7269021e06bd69e1b3774c8
                         </a>
                     </div>
                 </div>
@@ -661,14 +865,14 @@
                     <li class="event-time p-3 rounded-lg">
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Hari 1</span>
-                            <span class="font-bold text-amber-400">08:00 - 17:00</span>
+                            <span class="font-bold text-amber-400">08:00 - 22:00</span>
                         </div>
                         <p class="text-xs mt-1 text-gray-400">Pembukaan & Seminar Utama</p>
                     </li>
                     <li class="event-time p-3 rounded-lg">
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Hari 2</span>
-                            <span class="font-bold text-amber-400">08:00 - 17:00</span>
+                            <span class="font-bold text-amber-400">08:00 - 22:00</span>
                         </div>
                         <p class="text-xs mt-1 text-gray-400">Workshop & Pameran</p>
                     </li>

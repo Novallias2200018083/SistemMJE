@@ -54,6 +54,27 @@
                         <option value="Lain-lain" {{ old('regency') == 'Lain-lain' ? 'selected' : '' }}>Lain-lain</option>
                     </select>
                 </div>
+
+                <div>
+                    <label for="jobs_select" class="block text-sm font-medium text-gray-700 mb-1">Pekerjaan
+                        <span class="text-red-500">*</span>
+                    </label>
+                    <select id="jobs_select" name="jobs" required class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500">
+                        <option value="" disabled selected>Pilih Pekerjaan</option>
+                        <option value="Tidak Bekerja">Tidak Bekerja</option>
+                        <option value="Pelajar/Mahasiswa">Pelajar / Mahasiswa</option>
+                        <option value="PNS/TNI/Polri">PNS / TNI / Polri</option>
+                        <option value="Karyawan Swasta/Profesional">Karyawan Swasta / Profesional</option>
+                        <option value="Wirausaha/Pengusaha/Pedagang">Wirausaha / Pengusaha / Pedagang</option>
+                        <option value="Pekerja Harian">Pekerja Harian (Buruh, Tukang, dll.)</option>
+                        <option value="Petani/Nelayan">Petani / Nelayan</option>
+                        <option value="Guru/Dosen">Guru / Dosen</option>
+                        <option value="Tenaga Medis">Tenaga Medis</option>
+                        <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                        <option value="Pensiunan">Pensiunan</option>
+                    </select>
+                </div>
+                
                 <div id="other_regency_wrapper" class="hidden">
                     <label for="other_regency" class="block text-sm font-medium text-gray-700">Masukkan Nama Kabupaten/Kota</label>
                     <input id="other_regency" name="other_regency" type="text" value="{{ old('other_regency') }}" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-sky-500 focus:border-sky-500" />

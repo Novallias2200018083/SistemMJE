@@ -36,6 +36,7 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
         return [
             'Nama Peserta',
             'Nomor Token',
+            'Pekerjaan',
             'Asal Kabupaten/Kota',
             'Nomor HP',
             'Usia',
@@ -52,6 +53,7 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
         return [
             $attendance->attendee->name,
             $attendance->attendee->token,
+            $attendance->attendee->jobs,
             $attendance->attendee->regency,
             $attendance->attendee->phone_number,
             $attendance->attendee->age,
