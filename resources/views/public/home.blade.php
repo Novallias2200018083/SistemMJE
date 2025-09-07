@@ -332,7 +332,7 @@
                 </div>
             </section>
 
-            {{-- Data Event --}}
+            <!-- {{-- Data Event --}}
             <section class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 my-16">
                 <div class="stats-card border-sky-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
                     <div class="flex items-center justify-between">
@@ -379,7 +379,7 @@
                         <i class="fa-solid fa-award text-3xl sm:text-4xl text-purple-500"></i>
                     </div>
                 </div>
-            </section>
+            </section> -->
 
             <section class="bg-white p-10 rounded-3xl shadow-xl my-16">
                 <div class="flex justify-between items-center mb-8">
@@ -614,14 +614,14 @@
                     <li class="event-time p-3 rounded-lg">
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Hari 1</span>
-                            <span class="font-bold text-amber-400">08:00 - 17:00</span>
+                            <span class="font-bold text-amber-400">08:00 - 22:00</span>
                         </div>
                         <p class="text-xs mt-1 text-gray-400">Pembukaan & Seminar Utama</p>
                     </li>
                     <li class="event-time p-3 rounded-lg">
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Hari 2</span>
-                            <span class="font-bold text-amber-400">08:00 - 17:00</span>
+                            <span class="font-bold text-amber-400">08:00 - 22:00</span>
                         </div>
                         <p class="text-xs mt-1 text-gray-400">Workshop & Pameran</p>
                     </li>
