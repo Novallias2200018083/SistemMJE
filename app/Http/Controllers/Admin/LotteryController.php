@@ -7,7 +7,6 @@ use App\Models\Prize;
 use App\Models\Attendee;
 use App\Models\LotteryWinner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class LotteryController extends Controller
 {
@@ -34,21 +33,13 @@ class LotteryController extends Controller
         ));
     }
 
-/**
- * Menampilkan halaman roulette/spin untuk hadiah tertentu.
- */
-public function showSpinner(Prize $prize)
+    // Menandai hadiah sudah diambil
+    public function claim(LotteryWinner $winner)
 {
-    // Ambil peserta eligible yang belum pernah menang
-    $winnerIds = LotteryWinner::pluck('attendee_id');
-
-    $attendees = Attendee::whereHas('attendances')
-                         ->whereNotIn('id', $winnerIds)
-                         ->get();
-
-    // Pastikan view ini ada: resources/views/admin/lottery/spin.blade.php
-    return view('admin.lottery.spin', compact('prize', 'attendees'));
+    $winner->update(['is_claimed' => true]);
+    return redirect()->back()->with('success', 'Hadiah berhasil ditandai sebagai diambil.');
 }
+
 
     /**
      * Menyimpan hadiah baru.
@@ -56,12 +47,12 @@ public function showSpinner(Prize $prize)
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'value' => 'nullable|numeric',
-            'sponsor' => 'nullable|string',
+            'category'    => 'required|string',
+            'quantity'    => 'required|integer|min:1',
+            'value'       => 'nullable|numeric',
+            'sponsor'     => 'nullable|string',
         ]);
 
         Prize::create($request->all());
@@ -69,47 +60,48 @@ public function showSpinner(Prize $prize)
     }
 
     /**
-     * Melakukan proses pengundian untuk hadiah tertentu.
+     * Menampilkan halaman spinner dengan semua peserta eligible.
      */
+    public function showSpinner(Prize $prize)
+    {
+        $winnerIds = LotteryWinner::pluck('attendee_id');
+        $attendees = Attendee::whereHas('attendances')
+                            ->whereNotIn('id', $winnerIds)
+                            ->get();
+
+        return view('admin.lottery.spin', compact('prize', 'attendees'));
+    }
+
+    /** Melakukan undian dan simpan pemenang.**/
 public function draw(Request $request, Prize $prize)
 {
-    $attendeeId = $request->input('attendee_id');
-
-    // Validasi
     $winnerIds = LotteryWinner::pluck('attendee_id');
-    if (in_array($attendeeId, $winnerIds->toArray())) {
-        return response()->json(['error' => 'Peserta sudah pernah menang'], 422);
-    }
+$attendees = Attendee::whereHas('attendances')
+                ->whereNotIn('id', $winnerIds)
+                ->get()
+                ->values();
 
-    $attendee = Attendee::find($attendeeId);
-    if (!$attendee) {
-        return response()->json(['error' => 'Peserta tidak ditemukan'], 404);
-    }
-
-    // Simpan pemenang
-    LotteryWinner::create([
-        'attendee_id' => $attendee->id,
-        'prize_id' => $prize->id,
-    ]);
-
-    return response()->json([
-        'success' => true,
-        'winner' => [
-            'id' => $attendee->id,
-            'name' => $attendee->name,
-            'phone_number' => $attendee->phone_number
-        ]
-    ]);
+if ($attendees->isEmpty()) {
+    return response()->json(['success' => false, 'error' => 'Tidak ada peserta.'], 422);
 }
 
+$randomIndex = $attendees->keys()->random(); // pemenang
+$attendee = $attendees[$randomIndex];
 
+$lw = LotteryWinner::create([
+    'attendee_id' => $attendee->id,
+    'prize_id' => $prize->id,
+]);
 
-    /**
-     * Menandai hadiah sudah diambil oleh pemenang.
-     */
-    public function claim(LotteryWinner $winner)
-    {
-        $winner->update(['is_claimed' => true]);
-        return back()->with('success', 'Hadiah telah ditandai sebagai sudah diambil.');
-    }
+return response()->json([
+    'success' => true,
+    'winner' => [
+        'id' => $attendee->id,
+        'name' => $attendee->name,
+        'phone_number' => $attendee->phone_number,
+    ],
+    'winner_index' => $randomIndex, // kirim ke frontend
+    'attendees' => $attendees,      // kirim juga daftar peserta
+]);
+}
 }

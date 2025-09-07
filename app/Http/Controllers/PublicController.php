@@ -52,42 +52,44 @@ class PublicController extends Controller
 
     }
 
-    public function lottery(Request $request)
-    {
-        // Tentukan waktu pengundian (Hari terakhir event, jam 8 malam)
-        // Ganti tanggal ini sesuai dengan tanggal hari terakhir event Anda
-        $drawTime = Carbon::create(2025, 8, 27, 20, 0, 0, 'Asia/Jakarta');
-        $now = Carbon::now('Asia/Jakarta');
+public function lottery(Request $request)
+{
+    // Tentukan waktu pengundian (Hari terakhir event, jam 8 malam)
+    $drawTime = Carbon::create(2025, 8, 27, 20, 0, 0, 'Asia/Jakarta');
+    $now = Carbon::now('Asia/Jakarta');
 
-        // Jika waktu sekarang belum mencapai waktu pengundian
-        if ($now->isBefore($drawTime)) {
-            return view('public.lottery', [
-                'isDrawTime' => false,
-                'drawTime' => $drawTime
-            ]);
-        }
-
-        // Jika sudah waktu pengundian, ambil semua data pemenang
-        $winners = LotteryWinner::with('attendee')->latest('drawn_at')->get();
-
-        $searchResult = null;
-        $searchedToken = $request->input('token');
-
-        // Logika untuk pencarian token
-        if ($searchedToken) {
-            $isWinner = $winners->firstWhere('attendee.token', $searchedToken);
-            if ($isWinner) {
-                $searchResult = 'win';
-            } else {
-                $searchResult = 'lose';
-            }
-        }
-
+    // Jika waktu sekarang belum mencapai waktu pengundian
+    if ($now->isBefore($drawTime)) {
         return view('public.lottery', [
-            'isDrawTime' => true,
-            'winners' => $winners,
-            'searchResult' => $searchResult,
-            'searchedToken' => $searchedToken
+            'isDrawTime' => false,
+            'drawTime' => $drawTime
         ]);
     }
+
+    // Jika sudah waktu pengundian, ambil hanya pemenang yang sudah diklaim
+    $winners = LotteryWinner::with('attendee')
+        ->where('is_claimed', true)
+        ->latest('drawn_at')
+        ->get();
+
+    $searchResult = null;
+    $searchedToken = $request->input('token');
+
+    // Logika pencarian token
+    if ($searchedToken) {
+        $isWinner = $winners->firstWhere('attendee.token', $searchedToken);
+        if ($isWinner) {
+            $searchResult = 'win';
+        } else {
+            $searchResult = 'lose';
+        }
+    }
+
+    return view('public.lottery', [
+        'isDrawTime' => true,
+        'winners' => $winners,
+        'searchResult' => $searchResult,
+        'searchedToken' => $searchedToken
+    ]);
+}
 }
