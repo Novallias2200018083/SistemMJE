@@ -12,11 +12,11 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin Expo',
-            'email' => 'admin@expo.com',
-            'password' => Hash::make('password'), // Ganti dengan password yang aman
-            'role' => 'admin',
-        ]);
+        // User::create([
+        //     'name' => 'Admin Expo',
+        //     'email' => 'admin@expo.com',
+        //     'password' => Hash::make('password'), // Ganti dengan password yang aman
+        //     'role' => 'admin',
+        // ]);
     }
 }

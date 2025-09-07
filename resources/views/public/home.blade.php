@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 
 <head>
     <meta charset="utf-8">
@@ -17,101 +17,305 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: #f8fafc;
+            margin: 0;
+            padding: 0;
         }
 
-        .modal-enter {
-            opacity: 0;
-            transform: scale(0.95);
+        /* Header Fixed */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            opacity: 80%
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
         }
 
-        .modal-leave-to {
-            opacity: 0;
-            transform: scale(0.95);
+        .fixed-header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .modal-enter-active,
-        .modal-leave-active {
-            transition: all 0.3s ease;
+        .fixed-header .container {
+            transition: padding 0.3s ease-in-out;
+        }
+        .fixed-header.scrolled .py-4 {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
         }
 
-        .hero-gradient {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
+        .header-hidden {
+            transform: translateY(-100%);
+        }
+
+        /* Full Screen Carousel */
+        .fullscreen-carousel {
+            height: 100vh;
+            width: 100%;
             position: relative;
             overflow: hidden;
         }
 
-        .hero-gradient::before {
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        
+        .carousel-slide::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z' fill='%23ffffff'%3E%3C/path%3E%3C/svg%3E") bottom;
-            background-size: cover;
-            opacity: 0.1;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 50%);
         }
 
-        .card-hover {
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-color: rgba(14, 165, 233, 0.2);
-        }
-
-        .stats-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border-left: 4px solid;
-        }
-
-        .schedule-day {
-            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-            border-left: 4px solid #0ea5e9;
-        }
-
-        .event-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            transition: all 0.3s ease;
-        }
-
-        .event-card:hover {
-            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-            transform: translateX(10px);
-        }
-
-        .tenant-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid rgba(14, 165, 233, 0.1);
-        }
-
-        .cta-gradient {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
-        }
-
-        .wave-divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.5), transparent);
-            position: relative;
-        }
-
-        .wave-divider::before {
-            content: "";
+        .carousel-content {
             position: absolute;
-            top: -5px;
-            left: 0;
-            right: 0;
-            height: 10px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z' fill='%230ea5e9'%3E%3C/path%3E%3C/svg%3E");
-            background-size: cover;
-            background-repeat: no-repeat;
-            opacity: 0.2;
+            bottom: 20%;
+            left: 10%;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            max-width: 600px;
+            z-index: 5;
         }
 
+        .carousel-nav {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-control:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .carousel-control.prev {
+            left: 20px;
+        }
+
+        .carousel-control.next {
+            right: 20px;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 80px 0;
+        }
+        .sponsors-section {
+            background: white;
+        }
+
+        .sponsors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .sponsor-item {
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .sponsor-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sponsor-item img {
+            max-width: 100%;
+            max-height: 80px;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .sponsor-item:hover img {
+             filter: grayscale(0%);
+             opacity: 1;
+        }
+        
+        .schedule-section {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        .join-section {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white;
+        }
+
+        /* Schedule Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-container {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.show .modal-container {
+             transform: scale(1);
+        }
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-close-btn {
+            background: #f1f5f9;
+            color: #64748b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+            transform: rotate(90deg);
+        }
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Scroll Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .carousel-content {
+                left: 5%;
+                bottom: 15%;
+                max-width: 90%;
+            }
+            .carousel-content h1 {
+                font-size: 2rem;
+            }
+            .carousel-control {
+                width: 40px;
+                height: 40px;
+            }
+            section {
+                padding: 60px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .carousel-content h1 {
+                font-size: 1.8rem;
+            }
+            .carousel-content p {
+                font-size: 0.9rem;
+            }
+            .sponsors-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+        
         .logo-text {
             background: linear-gradient(135deg, #0ea5e9, #0284c7);
             -webkit-background-clip: text;
@@ -123,7 +327,6 @@
             position: relative;
             transition: all 0.3s ease;
         }
-
         .footer-link::after {
             content: '';
             position: absolute;
@@ -134,7 +337,6 @@
             background: linear-gradient(90deg, #0ea5e9, #f59e0b);
             transition: width 0.3s ease;
         }
-
         .footer-link:hover::after {
             width: 100%;
         }
@@ -149,7 +351,6 @@
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
         }
-
         .social-icon:hover {
             transform: translateY(-3px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -160,7 +361,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
-
         .newsletter-input:focus {
             outline: none;
             border-color: #0ea5e9;
@@ -171,16 +371,10 @@
             background: linear-gradient(90deg, #0ea5e9, #0284c7);
             transition: all 0.3s ease;
         }
-
         .subscribe-btn:hover {
             background: linear-gradient(90deg, #0284c7, #0ea5e9);
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .event-time {
-            background: rgba(14, 165, 233, 0.1);
-            border-left: 3px solid #0ea5e9;
         }
 
         .back-to-top {
@@ -197,16 +391,15 @@
             justify-content: center;
             cursor: pointer;
             opacity: 0;
+            transform: translateY(20px);
             transition: all 0.3s ease;
             z-index: 1000;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-
         .back-to-top.show {
             opacity: 1;
             transform: translateY(0);
         }
-
         .back-to-top:hover {
             transform: translateY(-5px);
         }
@@ -216,325 +409,179 @@
         }
 
         @keyframes float {
-            0% {
-                transform: translatey(0px);
-            }
-
-            50% {
-                transform: translatey(-20px);
-            }
-
-            100% {
-                transform: translatey(0px);
-            }
-        }
-
-        .pulse-animation {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            0% { transform: translatey(0px); }
+            50% { transform: translatey(-15px); }
+            100% { transform: translatey(0px); }
         }
     </style>
 </head>
 
 <body class="antialiased">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <header class="flex justify-between items-center py-6 relative z-10">
-            <div class="flex items-center space-x-3">
-                <div class="bg-sky-500 p-3 rounded-xl shadow-lg floating-animation">
-                    <i class="fa-solid fa-calendar-days text-white text-lg"></i>
+    <header class="fixed-header " id="main-header">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-sky-500 p-3 rounded-xl shadow-lg floating-animation">
+                        <i class="fa-solid fa-calendar-days text-white text-lg"></i>
+                    </div>
+                    <a href="{{ route('home') }}" class="font-bold text-xl">
+                        <span class="logo-text">Muhammadiyah</span><br>
+                        <span class="text-amber-500">Jogja Expo 2025</span>
+                    </a>
                 </div>
-                <a href="{{ route('home') }}" class="font-bold text-xl">
-                    <span class="logo-text">Muhammadiyah</span><br>
-                    <span class="text-amber-500">Jogja Expo 2025</span>
-                </a>
+
+                <nav class="hidden md:flex items-center space-x-2 text-black-600 text-bold">
+                    <a href="#hero" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Beranda</a>
+                    <a href="{{ route('event.register.form') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Pendaftaran</a>
+                    <a href="{{ route('ticket.find') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Cetak Tiket</a>
+                    <a href="{{ route('lottery.check') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Cek Undian</a>
+                    <a href="{{ route('news.index') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Portal Berita</a>
+                </nav>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="{{ route('login') }}" class="px-6 py-3 border-2 border-sky-500 text-sky-600 rounded-xl font-semibold hover:bg-sky-500 hover:text-white transition-all duration-300">Portal Tenan</a>
+                </div>
+
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-800 hover:text-sky-600 focus:outline-none" aria-label="Open menu">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
             </div>
+        </div>
 
-            <nav class="hidden md:flex items-center space-x-6 text-gray-600">
-                <a href="{{ route('home') }}"
-                    class="bg-gray-900 text-white px-5 py-3 rounded-xl font-semibold shadow-lg hover:bg-gray-800 transition-all duration-300"><i
-                        class="fa-solid fa-house mr-2"></i>Beranda</a>
-                <a href="{{ route('event.register.form') }}"
-                    class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300"><i
-                        class="fa-solid fa-calendar-check mr-2"></i>Pendaftaran</a>
-                <a href="{{ route('ticket.find') }}"
-                    class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300"><i
-                        class="fa-solid fa-print mr-2"></i>Cetak Tiket</a>
-                <a href="{{ route('lottery.check') }}"
-                    class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300"><i
-                        class="fa-solid fa-ticket mr-2"></i>Cek Undian</a>
-                <a href="{{ route('news.index') }}"
-                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300">
-                    <i class="fa-solid fa-newspaper fa-fw mr-3"></i>Portal Berita
-                </a>
-
-            </nav>
-            <div class="hidden md:flex items-center space-x-4">
-                <a href="{{ route('login') }}"
-                    class="px-6 py-3 border-2 border-sky-500 text-sky-600 rounded-xl font-semibold hover:bg-sky-500 hover:text-white transition-all duration-300">Portal
-                    Tenan</a>
-            </div>
-
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-800 hover:text-sky-600 focus:outline-none">
-                    <i class="fa-solid fa-bars text-2xl"></i>
-                </button>
-            </div>
-        </header>
-
-        <div id="mobile-menu"
-            class="hidden md:hidden bg-white rounded-2xl shadow-lg mt-2 absolute top-24 left-4 right-4 z-20">
+        <div id="mobile-menu" class="hidden md:hidden bg-white rounded-2xl shadow-lg mt-2 absolute top-full left-4 right-4 z-20">
             <nav class="flex flex-col p-7 space-y-5">
-                <a href="{{ route('home') }}"
-                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
-                        class="fa-solid fa-house fa-fw mr-3"></i>Beranda</a>
-                <a href="{{ route('event.register.form') }}"
-                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
-                        class="fa-solid fa-calendar-check fa-fw mr-3"></i>Pendaftaran</a>
-                <a href="{{ route('ticket.find') }}"
-                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
-                        class="fa-solid fa-print fa-fw mr-3"></i>Cetak Tiket</a>
-                <a href="{{ route('lottery.check') }}"
-                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i
-                        class="fa-solid fa-ticket fa-fw mr-3"></i>Cek Undian</a>
-                <a href="{{ route('news.index') }}"
-                    class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300">
-                    <i class="fa-solid fa-newspaper fa-fw mr-3"></i>Portal Berita</a>
-                <a href="{{ route('login') }}"
-                    class="w-full text-center px-6 py-3 border-2 border-sky-500 text-sky-600 rounded-xl font-semibold hover:bg-sky-500 hover:text-white transition-all duration-300">Portal
-                    Tenan</a>
+                <a href="#hero" class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i class="fa-solid fa-house fa-fw mr-3"></i>Beranda</a>
+                <a href="{{ route('event.register.form') }}" class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i class="fa-solid fa-calendar-check fa-fw mr-3"></i>Pendaftaran</a>
+                <a href="{{ route('ticket.find') }}" class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i class="fa-solid fa-print fa-fw mr-3"></i>Cetak Tiket</a>
+                <a href="{{ route('lottery.check') }}" class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i class="fa-solid fa-ticket fa-fw mr-3"></i>Cek Undian</a>
+                <a href="{{ route('news.index') }}" class="text-gray-700 hover:bg-sky-50 hover:text-sky-600 font-semibold px-4 py-3 rounded-lg transition-all duration-300"><i class="fa-solid fa-newspaper fa-fw mr-3"></i>Portal Berita</a>
+                <a href="{{ route('login') }}" class="w-full text-center px-6 py-3 border-2 border-sky-500 text-sky-600 rounded-xl font-semibold hover:bg-sky-500 hover:text-white transition-all duration-300">Portal Tenan</a>
             </nav>
         </div>
-        <main>
-            {{-- banner --}}
-            <section
-                class="hero-gradient text-white rounded-3xl px-6 py-12 md:px-20 md:py-24 text-center my-8 shadow-2xl relative">
-                <div class="relative z-10">
-                    <!-- Judul -->
-                    <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-                        Muhammadiyah<br>
-                        <span class="text-amber-300">Jogja Expo 2025</span>
-                    </h1>
+    </header>
 
-                    <!-- Subjudul -->
-                    <p class="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl lg:text-2xl opacity-90 max-w-3xl mx-auto">
-                        Event Tahunan Terbesar Muhammadiyah Yogyakarta
+    <main>
+        <section class="fullscreen-carousel mt-[5.5rem]" id="hero">
+            <div class="carousel-slide active">
+                <img src="{{ asset('images/logomje.jpg') }}" alt="Muhammadiyah Jogja Expo">
+                <div class="carousel-content">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">Muhammadiyah Jogja Expo 2025</h1>
+                    <p class="text-xl md:text-2xl mb-6">Event Tahunan Terbesar Muhammadiyah Yogyakarta</p>
+                    <a href="{{ route('event.register.form') }}" class="bg-white text-sky-600 font-bold py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">
+                        <i class="fa-solid fa-user-plus mr-2"></i>
+                        Daftar Sekarang
+                    </a>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{{ asset('images/mje1.jpg') }}" alt="Inovasi dan Kreativitas">
+                <div class="carousel-content mb-10">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">Inovasi dan Kreativitas</h1>
+                    <p class="text-xl md:text-2xl mb-6">Temukan berbagai inovasi terbaru dari Muhammadiyah Yogyakarta</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{{ asset('images/mje2.jpeg') }}" alt="Kolaborasi dan Sinergi">
+                <div class="carousel-content mb-10">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">Kolaborasi dan Sinergi</h1>
+                    <p class="text-xl md:text-2xl mb-6">Bersama membangun masa depan yang lebih baik</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="{{ asset('images/mje3.jpg') }}" alt="Acara Inspiratif">
+                <div class="carousel-content mb-10">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">3 Hari Penuh Inspirasi</h1>
+                    <p class="text-xl md:text-2xl mb-6">Jangan lewatkan berbagai acara menarik selama 3 hari</p>
+                </div>
+            </div>
+
+            <div class="carousel-control prev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></div>
+            <div class="carousel-control next" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></div>
+            <div class="carousel-nav mb-20"></div>
+        </section>
+
+        <section class="schedule-section" id="schedule">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white p-8 md:p-10 rounded-3xl shadow-xl animate-on-scroll">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 md:mb-0">Jadwal Acara</h2>
+                        <span class="bg-gradient-to-r from-sky-100 to-blue-100 text-sky-700 font-semibold px-6 py-3 rounded-xl border border-sky-200">3 Hari Event</span>
+                    </div>
+                    <div class="space-y-10">
+                        @for ($i = 1; $i <= 3; $i++)
+                            @php $eventsThisDay = $eventsByDay->get($i, collect()); @endphp
+                            <div class="border-l-4 border-sky-500 p-6 rounded-2xl bg-slate-50">
+                                <h3 class="text-2xl font-bold text-sky-600 mb-6 flex items-center">
+                                    <i class="fa-solid fa-calendar-day mr-3 text-3xl"></i>
+                                    Hari {{ $i }} - Event Day {{ $i }}
+                                </h3>
+                                @forelse($eventsThisDay->take(3) as $event)
+                                    <div class="bg-white p-6 rounded-xl mb-4 border border-gray-200 transition-all duration-300 hover:shadow-md hover:border-sky-200">
+                                        <div class="flex justify-between items-start">
+                                            <div class="flex-1">
+                                                <p class="font-bold text-lg text-gray-800 mb-2">{{ $event->title }}</p>
+                                                <p class="text-gray-600 mb-4">{{ \Illuminate\Support\Str::limit($event->description, 100) }}</p>
+                                                <div class="flex items-center space-x-6 text-sm text-gray-500">
+                                                    <span class="flex items-center bg-gray-100 px-3 py-2 rounded-lg"><i class="fa-regular fa-clock mr-2 text-sky-500"></i> {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}</span>
+                                                    <span class="flex items-center bg-gray-100 px-3 py-2 rounded-lg"><i class="fa-solid fa-location-dot mr-2 text-red-500"></i> {{ $event->location }}</span>
+                                                </div>
+                                            </div>
+                                            <span class="text-sm font-semibold bg-sky-500 text-white px-4 py-2 rounded-full ml-4 hidden sm:block">Hari {{ $i }}</span>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="text-center py-8">
+                                        <i class="fa-solid fa-calendar-xmark text-4xl text-gray-300 mb-4"></i>
+                                        <p class="text-gray-500">Jadwal untuk hari ke-{{ $i }} akan segera diumumkan.</p>
+                                    </div>
+                                @endforelse
+
+                                @if ($eventsThisDay->count() > 3)
+                                    <div class="text-center mt-6">
+                                        <button class="show-more-btn px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg" data-day="{{ $i }}" data-title="Rundown Lengkap Hari {{ $i }}">
+                                            Lihat Lebih Banyak <i class="fa-solid fa-chevron-down ml-2"></i>
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
+                        @endfor
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section 
+            id="join" 
+            class="relative min-h-screen flex items-center justify-center text-white" 
+            style="background-image: url('{{ asset('images/muhammadiyah-bg.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;"
+        >
+            <div class="absolute top-0 left-0 w-full h-full bg-black/60 z-0"></div>
+
+            <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center z-10 animate-on-scroll">
+                <div class="max-w-3xl">
+                    <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">
+                        Jadilah Bagian Dari <br class="md:hidden">
+                        <span class="text-amber-400">Gerakan Pencerahan</span>
+                    </h2>
+                    <p class="text-lg md:text-xl text-white/90 mx-auto mb-10" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">
+                        Jangan lewatkan kesempatan untuk berpartisipasi dalam event terbesar Muhammadiyah Jogja. Daftar sekarang sebagai peserta atau jadi bagian dari pameran sebagai tenan.
                     </p>
-
-                    <!-- Tombol -->
-                    <div class="mt-8 sm:mt-10 flex justify-center">
-                        <a href="{{ route('event.register.form') }}"
-                            class="bg-white text-sky-600 font-bold py-3 px-6 sm:py-4 sm:px-8 rounded-xl 
-                      hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 
-                      shadow-lg pulse-animation inline-flex items-center text-sm sm:text-base md:text-lg">
-                            <i class="fa-solid fa-user-plus mr-2 sm:mr-3"></i>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+                        <a href="{{ route('event.register.form') }}" class="w-full sm:w-auto bg-amber-400 text-slate-900 font-bold py-4 px-8 rounded-xl hover:bg-amber-500 transition-all duration-300 shadow-lg flex items-center justify-center transform hover:-translate-y-1">
+                            <i class="fa-solid fa-user-plus mr-3"></i>
                             Daftar Sekarang
                         </a>
-                    </div>
-                </div>
-            </section>
-
-            {{-- Data Event --}}
-            <section class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 my-16">
-                <div class="stats-card border-sky-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">
-                                {{ number_format($totalAttendees, 0, ',', '.') }}
-                            </p>
-                            <p class="text-gray-600 mt-2 font-medium">Total Peserta Terdaftar</p>
-                        </div>
-                        <i class="fa-solid fa-users text-3xl sm:text-4xl text-sky-500"></i>
-                    </div>
-                </div>
-
-                <div class="stats-card border-blue-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">
-                                {{ number_format($totalAttendance, 0, ',', '.') }}
-                            </p>
-                            <p class="text-gray-600 mt-2 font-medium">Total Kehadiran</p>
-                        </div>
-                        <i class="fa-solid fa-calendar-day text-3xl sm:text-4xl text-blue-500"></i>
-                    </div>
-                </div>
-
-                <div class="stats-card border-orange-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">
-                                {{ number_format($totalSales, 0, ',', '.') }}
-                            </p>
-                            <p class="text-gray-600 mt-2 font-medium">Total Penjualan</p>
-                        </div>
-                        <i class="fa-solid fa-chart-line text-3xl sm:text-4xl text-orange-500"></i>
-                    </div>
-                </div>
-
-                <div class="stats-card border-purple-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">3</p>
-                            <p class="text-gray-600 mt-2 font-medium">Hari Event</p>
-                        </div>
-                        <i class="fa-solid fa-award text-3xl sm:text-4xl text-purple-500"></i>
-                    </div>
-                </div>
-            </section>
-
-            <section class="bg-white p-10 rounded-3xl shadow-xl my-16">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-4xl font-bold text-gray-800">Jadwal Acara</h2>
-                    <span
-                        class="bg-gradient-to-r from-sky-100 to-blue-100 text-sky-700 font-semibold px-6 py-3 rounded-xl border border-sky-200">3
-                        Hari Event</span>
-                </div>
-                <div class="space-y-10">
-                    @for ($i = 1; $i <= 3; $i++)
-                        @php $eventsThisDay = $eventsByDay->get($i, collect()); @endphp
-                        <div class="schedule-day p-6 rounded-2xl">
-                            <h3 class="text-2xl font-bold text-sky-600 mb-6 flex items-center">
-                                <i class="fa-solid fa-calendar-day mr-3 text-3xl"></i>
-                                Hari {{ $i }} - Event Day {{ $i }}
-                            </h3>
-                            @forelse($eventsThisDay->take(3) as $event)
-                                <div class="event-card p-6 rounded-xl mb-4 border border-gray-200">
-                                    <div class="flex justify-between items-start">
-                                        <div class="flex-1">
-                                            <p class="font-bold text-lg text-gray-800 mb-2">{{ $event->title }}</p>
-                                            <p class="text-gray-600 mb-4">{{ $event->description }}</p>
-                                            <div class="flex items-center space-x-6 text-sm text-gray-500">
-                                                <span class="flex items-center bg-white px-3 py-2 rounded-lg border">
-                                                    <i class="fa-regular fa-clock mr-2 text-sky-500"></i>
-                                                    {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }} -
-                                                    {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
-                                                </span>
-                                                <span class="flex items-center bg-white px-3 py-2 rounded-lg border">
-                                                    <i class="fa-solid fa-location-dot mr-2 text-red-500"></i>
-                                                    {{ $event->location }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <span
-                                            class="text-sm font-semibold bg-sky-500 text-white px-4 py-2 rounded-full ml-4">Hari
-                                            {{ $i }}</span>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="text-center py-8">
-                                    <i class="fa-solid fa-calendar-xmark text-4xl text-gray-300 mb-4"></i>
-                                    <p class="text-gray-500">Jadwal untuk hari ke-{{ $i }} akan segera
-                                        diumumkan.</p>
-                                </div>
-                            @endforelse
-
-                            @if ($eventsThisDay->count() > 3)
-                                <div class="text-center mt-6">
-                                    <button
-                                        class="show-more-btn px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg"
-                                        data-day="{{ $i }}"
-                                        data-title="Rundown Lengkap Hari {{ $i }}">
-                                        Lihat Lebih Banyak <i class="fa-solid fa-chevron-down ml-2"></i>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    @endfor
-                </div>
-            </section>
-
-            {{-- Tenant Terlaris --}}
-            <section class="my-16">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Tenan Terlaris</h2>
-                    <p class="text-lg sm:text-xl text-gray-600">Tenan dengan performa terbaik di expo ini</p>
-                </div>
-
-                <!-- Grid responsif -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                    @foreach ($topTenants as $category => $tenants)
-                        <div class="tenant-card p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
-                            <div class="text-center mb-6">
-                                <h3
-                                    class="text-xl sm:text-2xl font-bold mb-2 capitalize flex items-center justify-center">
-                                    <i class="fa-solid fa-star text-amber-400 mr-2 sm:mr-3 text-lg sm:text-2xl"></i>
-                                    {{ str_replace('_', ' ', $category) }}
-                                </h3>
-                                <p class="text-gray-500 text-sm sm:text-base">Tenan dengan penjualan tertinggi</p>
-                            </div>
-
-                            <ul class="space-y-3 sm:space-y-4">
-                                @forelse($tenants as $index => $tenant)
-                                    <li
-                                        class="flex justify-between items-center p-3 sm:p-4 rounded-xl 
-                            {{ $index == 0
-                                ? 'bg-gradient-to-r from-amber-50 to-yellow-50 border-l-4 border-amber-400'
-                                : ($index == 1
-                                    ? 'bg-gradient-to-r from-gray-50 to-slate-50 border-l-4 border-gray-400'
-                                    : 'bg-gradient-to-r from-orange-50 to-red-50 border-l-4 border-orange-400') }}">
-                                        <div class="flex items-center">
-                                            <span
-                                                class="{{ $index == 0 ? 'bg-amber-400 text-white' : ($index == 1 ? 'bg-gray-400 text-white' : 'bg-orange-400 text-white') }} rounded-full w-7 h-7 sm:w-8 sm:h-8 inline-flex items-center justify-center mr-3 sm:mr-4 font-bold text-xs sm:text-sm">
-                                                {{ $index + 1 }}
-                                            </span>
-                                            <span class="font-semibold text-gray-800 text-sm sm:text-base">
-                                                {{ $tenant->tenant_name }}
-                                            </span>
-                                        </div>
-                                        <span class="font-bold text-gray-700 text-sm sm:text-base">
-                                            {{ number_format($tenant->total_sales, 0, ',', '.') }}
-                                        </span>
-                                    </li>
-                                @empty
-                                    <li class="text-center py-6">
-                                        <i class="fa-solid fa-chart-line text-2xl sm:text-3xl text-gray-300 mb-2"></i>
-                                        <p class="text-gray-400 text-sm sm:text-base">Belum ada data penjualan.</p>
-                                    </li>
-                                @endforelse
-                            </ul>
-                        </div>
-                    @endforeach
-                </div>
-            </section>
-
-            {{-- banner action --}}
-            <section
-                class="cta-gradient text-white px-6 py-12 sm:px-10 md:px-16 md:py-20 rounded-3xl shadow-2xl my-16 text-center relative overflow-hidden">
-
-                <!-- Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black opacity-20"></div>
-
-                <div class="relative z-10">
-                    <!-- Judul -->
-                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                        Bergabunglah dengan Event Terbesar Tahun Ini!
-                    </h2>
-
-                    <!-- Deskripsi -->
-                    <p class="text-base sm:text-lg md:text-xl opacity-90 mb-8 max-w-3xl mx-auto leading-relaxed">
-                        Daftarkan diri Anda sekarang untuk mendapatkan akses ke seluruh acara, kesempatan memenangkan
-                        doorprize menarik, dan pengalaman tak terlupakan.
-                    </p>
-
-                    <!-- Tombol -->
-                    <div
-                        class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                        <a href="{{ route('event.register.form') }}"
-                            class="bg-amber-500 hover:bg-amber-400 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 
-                       rounded-xl transition-all duration-300 shadow-lg flex items-center text-sm sm:text-base">
-                            <i class="fa-solid fa-calendar-check mr-2 sm:mr-3"></i>
-                            Daftar Event Gratis
-                        </a>
-                        <a href="#"
-                            class="bg-white hover:bg-gray-100 text-gray-900 font-bold py-3 sm:py-4 px-6 sm:px-8 
-                       rounded-xl transition-all duration-300 shadow-lg flex items-center text-sm sm:text-base">
-                            <i class="fa-solid fa-download mr-2 sm:mr-3"></i>
-                            Download Tiket
+                        <a href="{{ route('login') }}" class="w-full sm:w-auto bg-transparent border-2 border-white/80 text-white font-bold py-4 px-8 rounded-xl hover:bg-white/10 hover:border-white transition-all duration-300 flex items-center justify-center">
+                            <i class="fa-solid fa-store mr-3"></i>
+                            Jadi Tenan
                         </a>
                     </div>
                 </div>
-            </section>
-        </main>
-    </div>
+            </div>
+        </section>
+    </main>
 
     <footer class="bg-gradient-to-b from-gray-900 to-slate-800 text-gray-300 mt-16 relative overflow-hidden">
         <div
@@ -670,225 +717,215 @@
         <div id="backToTop" class="back-to-top">
             <i class="fas fa-arrow-up"></i>
         </div>
+
     </footer>
 
-    <div id="scheduleModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl m-4 max-h-[90vh] overflow-hidden">
-            <div
-                class="flex justify-between items-center p-6 border-b bg-gradient-to-r from-sky-500 to-blue-600 text-white">
-                <h3 id="modal-title" class="text-2xl font-bold"></h3>
-                <button id="close-modal-btn"
-                    class="text-white hover:text-gray-200 text-3xl transition-colors duration-300 w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:bg-opacity-20">
-                    <i class="fa-solid fa-times"></i>
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+    
+    <div id="schedule-modal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="modal-title" class="text-2xl font-bold text-gray-800"></h2>
+                <button id="modal-close" class="modal-close-btn" aria-label="Close modal">
+                    <i class="fa-solid fa-times text-xl"></i>
                 </button>
             </div>
-            <div id="modal-body" class="p-6 max-h-[70vh] overflow-y-auto space-y-4"></div>
+            <div id="modal-body" class="modal-body space-y-4">
+                </div>
         </div>
     </div>
-
+    
     <script>
-        const allEvents = @json($eventsByDay);
+    // Dummy Data for the Modal - in a real Laravel app, you'd pass this from the controller
+    const allEvents = @json($eventsByDay);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('scheduleModal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalBody = document.getElementById('modal-body');
-            const closeModalBtn = document.getElementById('close-modal-btn');
-            const showMoreBtns = document.querySelectorAll('.show-more-btn');
-            const backToTopButton = document.getElementById('backToTop');
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Header Scroll Logic ---
+        const header = document.getElementById('main-header');
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            if (lastScrollY < window.scrollY && window.scrollY > 150) {
+                header.classList.add('header-hidden');
+            } else {
+                header.classList.remove('header-hidden');
+            }
+            lastScrollY = window.scrollY;
+        });
 
-            // ===== START: Mobile Menu Toggle Functionality =====
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const menuIcon = mobileMenuButton.querySelector('i');
-
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-                if (mobileMenu.classList.contains('hidden')) {
-                    menuIcon.classList.remove('fa-times');
-                    menuIcon.classList.add('fa-bars');
-                } else {
-                    menuIcon.classList.remove('fa-bars');
-                    menuIcon.classList.add('fa-times');
-                }
+        // --- Mobile Menu Toggle ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
             });
-            // ===== END: Mobile Menu Toggle Functionality =====
+        });
 
-            function openModal(day, title) {
+        // --- Fullscreen Carousel Logic ---
+        const slides = document.querySelectorAll('.carousel-slide');
+        const navContainer = document.querySelector('.carousel-nav');
+        const prevBtn = document.querySelector('.carousel-control.prev');
+        const nextBtn = document.querySelector('.carousel-control.next');
+        const carousel = document.querySelector('.fullscreen-carousel');
+        let currentSlide = 0;
+        let slideInterval;
+
+        // Create dots
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('carousel-dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                goToSlide(i);
+                resetInterval();
+            });
+            navContainer.appendChild(dot);
+        });
+        const dots = document.querySelectorAll('.carousel-dot');
+
+        const goToSlide = (slideIndex) => {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            currentSlide = (slideIndex + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        };
+
+        nextBtn.addEventListener('click', () => {
+            goToSlide(currentSlide + 1);
+            resetInterval();
+        });
+        prevBtn.addEventListener('click', () => {
+            goToSlide(currentSlide - 1);
+            resetInterval();
+        });
+
+        const startInterval = () => {
+            slideInterval = setInterval(() => {
+                goToSlide(currentSlide + 1);
+            }, 5000); // Change slide every 5 seconds
+        };
+        const resetInterval = () => {
+            clearInterval(slideInterval);
+            startInterval();
+        };
+        
+        carousel.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        carousel.addEventListener('mouseleave', startInterval);
+
+        startInterval();
+        
+        // --- Schedule Modal Logic ---
+        const modal = document.getElementById('schedule-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const modalCloseBtn = document.getElementById('modal-close');
+        
+        document.querySelectorAll('.show-more-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const day = button.dataset.day;
+                const title = button.dataset.title;
+                const events = allEvents[day] || [];
+                
                 modalTitle.textContent = title;
-                modalBody.innerHTML = '';
-                const eventsForDay = allEvents[day] || [];
+                modalBody.innerHTML = ''; // Clear previous content
 
-                if (eventsForDay.length > 0) {
-                    eventsForDay.forEach((event, index) => {
-                        const eventCard = document.createElement('div');
-                        eventCard.className =
-                            'bg-gradient-to-r from-gray-50 to-slate-50 p-6 rounded-xl border-l-4 border-sky-500 hover:shadow-lg transition-all duration-300';
-
-                        const startTime = new Date(event.start_time).toLocaleTimeString('id-ID', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                        const endTime = new Date(event.end_time).toLocaleTimeString('id-ID', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-
-                        eventCard.innerHTML = `
-                            <div class="flex justify-between items-start">
-                                <div class="flex-1">
-                                    <div class="flex items-center mb-3">
-                                        <span class="bg-sky-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
-                                            ${index + 1}
-                                        </span>
-                                        <p class="font-bold text-lg text-gray-800">${event.title}</p>
-                                    </div>
-                                    <p class="text-gray-600 mb-4 ml-11">${event.description}</p>
-                                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 ml-11">
-                                        <span class="flex items-center bg-white px-3 py-2 rounded-lg border shadow-sm">
-                                            <i class="fa-regular fa-clock mr-2 text-sky-500"></i>
-                                            ${startTime} - ${endTime}
-                                        </span>
-                                        <span class="flex items-center bg-white px-3 py-2 rounded-lg border shadow-sm">
-                                            <i class="fa-solid fa-location-dot mr-2 text-red-500"></i>
-                                            ${event.location}
-                                        </span>
-                                    </div>
+                if (events.length > 0) {
+                     events.forEach(event => {
+                        const eventHtml = `
+                            <div class="bg-slate-50 p-4 rounded-lg border-l-4 border-sky-400">
+                                <p class="font-bold text-gray-800">${event.title}</p>
+                                <p class="text-gray-600 text-sm my-2">${event.description}</p>
+                                <div class="flex items-center space-x-4 text-xs text-gray-500 mt-3">
+                                    <span class="flex items-center"><i class="fa-regular fa-clock mr-2 text-sky-500"></i> ${new Date('1970-01-01T' + event.start_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} - ${new Date('1970-01-01T' + event.end_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <span class="flex items-center"><i class="fa-solid fa-location-dot mr-2 text-red-500"></i> ${event.location}</span>
                                 </div>
-                                <span class="text-sm font-semibold bg-sky-500 text-white px-4 py-2 rounded-full ml-4 shrink-0">
-                                    Hari ${day}
-                                </span>
                             </div>
                         `;
-                        modalBody.appendChild(eventCard);
+                        modalBody.insertAdjacentHTML('beforeend', eventHtml);
                     });
                 } else {
-                    modalBody.innerHTML = `
-                        <div class="text-center py-12">
-                            <i class="fa-solid fa-calendar-xmark text-6xl text-gray-300 mb-4"></i>
-                            <p class="text-xl text-gray-500">Tidak ada jadwal untuk hari ini.</p>
-                        </div>
-                    `;
+                     modalBody.innerHTML = '<p class="text-gray-500">Jadwal belum tersedia.</p>';
                 }
 
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.remove('modal-enter');
-                }, 10);
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            });
+        });
+        
+        const closeModal = () => {
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        };
+
+        modalCloseBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
             }
-
-            function closeModal() {
-                modal.classList.add('modal-leave-to');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    modal.classList.remove('modal-leave-to');
-                    modal.classList.add('modal-enter');
-                }, 300);
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && modal.classList.contains('show')) {
+                 closeModal();
             }
+        });
 
-            showMoreBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const day = this.dataset.day;
-                    const title = this.dataset.title;
-                    openModal(day, title);
-                });
+
+        // --- Back to Top Button ---
+        const backToTopButton = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
-
-            closeModalBtn.addEventListener('click', closeModal);
-
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeModal();
-                }
-            });
-
-            // Back to top button functionality
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    backToTopButton.classList.add('show');
-                } else {
-                    backToTopButton.classList.remove('show');
-                }
-            });
-
-            backToTopButton.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
+        });
+        
+        // --- Smooth Scrolling for Anchor Links ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
             });
-
-            // Newsletter form functionality
-            const newsletterForm = document.querySelector('.flex.flex-col.sm\\:flex-row.gap-2');
-            const emailInput = document.querySelector('input[type="email"]');
-            const subscribeBtn = document.querySelector('.subscribe-btn');
-
-            if (newsletterForm && emailInput && subscribeBtn) {
-                subscribeBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    if (!emailInput.value || !isValidEmail(emailInput.value)) {
-                        emailInput.focus();
-                        emailInput.style.borderColor = '#ef4444';
-                        emailInput.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.3)';
-
-                        // Reset border after 3 seconds
-                        setTimeout(() => {
-                            emailInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                            emailInput.style.boxShadow = 'none';
-                        }, 3000);
-                        return;
-                    }
-
-                    emailInput.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                    emailInput.style.boxShadow = 'none';
-
-                    // Show success message
-                    const originalText = subscribeBtn.textContent;
-                    subscribeBtn.textContent = 'Berhasil!';
-                    subscribeBtn.style.background = 'linear-gradient(90deg, #10b981, #059669)';
-
-                    setTimeout(() => {
-                        subscribeBtn.textContent = originalText;
-                        subscribeBtn.style.background = 'linear-gradient(90deg, #0ea5e9, #0284c7)';
-                        emailInput.value = '';
-                    }, 2000);
-                });
-            }
-
-            function isValidEmail(email) {
-                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return re.test(email);
-            }
-
-            // Smooth scroll for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-
-            // Add loading state to CTA buttons
-            document.querySelectorAll('a[href*="register"], a[href*="download"]').forEach(button => {
-                button.addEventListener('click', function() {
-                    const originalContent = this.innerHTML;
-                    this.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-3"></i>Loading...';
-
-                    // Reset after 2 seconds (simulate loading)
-                    setTimeout(() => {
-                        this.innerHTML = originalContent;
-                    }, 2000);
-                });
-            });
         });
+        
+        // --- Animate on Scroll (Intersection Observer) ---
+        const animatedElements = document.querySelectorAll('.animate-on-scroll');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        animatedElements.forEach(el => {
+            observer.observe(el);
+        });
+    });
     </script>
 </body>
-
 </html>
