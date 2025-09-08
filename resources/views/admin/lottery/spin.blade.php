@@ -110,7 +110,7 @@
                 const targetAngleDeg = (TOTAL_SEGMENTS - Math.floor(Math.random()*TOTAL_SEGMENTS)) * anglePerSegmentDeg - anglePerSegmentDeg/2;
                 const spins = 6 + Math.floor(Math.random()*3);
                 const finalRotationDeg = spins * 360 + targetAngleDeg;
-                const duration = 4000; // 4 detik spin
+                const duration = 10000; // 10 detik spin
                 const startTime = performance.now();
 
                 function animate(now){
