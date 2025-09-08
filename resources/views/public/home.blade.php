@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Muhammadiyah Jogja Expo 2025</title>
+    
+    <link rel="icon" href="{{ asset('mjelogo.png') }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
@@ -29,16 +31,22 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.8);
-            opacity: 80%
+            background: rgb(18, 36, 74);
+            opacity: 20%
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease-in-out;
+            /* Properti CSS yang benar untuk teks putih dan tebal */
+            color: white;
+            font-weight: bold;
         }
 
         .fixed-header.scrolled {
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            /* Properti CSS yang benar untuk teks putih dan tebal */
+            color: black;
+            font-weight: bold;
         }
 
         .fixed-header .container {
@@ -158,49 +166,8 @@
         section {
             padding: 80px 0;
         }
-        .sponsors-section {
-            background: white;
-        }
+    
 
-        .sponsors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            align-items: center;
-            justify-items: center;
-        }
-
-        .sponsor-item {
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 120px;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .sponsor-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .sponsor-item img {
-            max-width: 100%;
-            max-height: 80px;
-            object-fit: contain;
-            filter: grayscale(100%);
-            opacity: 0.7;
-            transition: all 0.3s ease;
-        }
-
-        .sponsor-item:hover img {
-             filter: grayscale(0%);
-             opacity: 1;
-        }
-        
         .schedule-section {
             background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
         }
@@ -421,8 +388,8 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-sky-500 p-3 rounded-xl shadow-lg floating-animation">
-                        <i class="fa-solid fa-calendar-days text-white text-lg"></i>
+                    <div class="p-3 rounded-xl shadow-lg floating-animation">
+                        <img src="{{ asset('mjelogo.png') }}" alt="MJELogo" class="w-6 h-6 object-contain">
                     </div>
                     <a href="{{ route('home') }}" class="font-bold text-xl">
                         <span class="logo-text">Muhammadiyah</span><br>
@@ -430,7 +397,7 @@
                     </a>
                 </div>
 
-                <nav class="hidden md:flex items-center space-x-2 text-black-600 text-bold">
+                <nav class="hidden md:flex items-center space-x-2 text-bold">
                     <a href="#hero" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Beranda</a>
                     <a href="{{ route('event.register.form') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Pendaftaran</a>
                     <a href="{{ route('ticket.find') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Cetak Tiket</a>
@@ -438,11 +405,11 @@
                     <a href="{{ route('news.index') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Portal Berita</a>
                 </nav>
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="{{ route('login') }}" class="px-6 py-3 border-2 border-sky-500 text-sky-600 rounded-xl font-semibold hover:bg-sky-500 hover:text-white transition-all duration-300">Portal Tenan</a>
+                    <a href="{{ route('login') }}" class="px-6 py-3 border-2 bg-amber-500 border-white-500 text-white-600 rounded-xl font-semibold hover:bg-green-500 hover:text-white transition-all duration-300">Portal Tenan</a>
                 </div>
 
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-gray-800 hover:text-sky-600 focus:outline-none" aria-label="Open menu">
+                    <button id="mobile-menu-button" class="text-white-800 hover:text-sky-600 focus:outline-none" aria-label="Open menu">
                         <i class="fa-solid fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -465,45 +432,55 @@
         <section class="fullscreen-carousel mt-[5.5rem]" id="hero">
             <div class="carousel-slide active">
                 <img src="{{ asset('images/logomje.jpg') }}" alt="Muhammadiyah Jogja Expo">
-                <div class="carousel-content">
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">Muhammadiyah Jogja Expo 2025</h1>
-                    <p class="text-xl md:text-2xl mb-6">Event Tahunan Terbesar Muhammadiyah Yogyakarta</p>
-                    <a href="{{ route('event.register.form') }}" class="bg-white text-sky-600 font-bold py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">
-                        <i class="fa-solid fa-user-plus mr-2"></i>
-                        Daftar Sekarang
-                    </a>
+                <div class="carousel-content mt-[10rem]">
+                    <!--<a href="{{ route('event.register.form') }}" class="bg-green-500 text-white-600 font-bold text-center py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">-->
+                    <!--    <i class="fa-solid fa-user-plus mr-2"></i>-->
+                    <!--    Daftar Sekarang-->
+                    <!--</a>-->
                 </div>
             </div>
             <div class="carousel-slide">
                 <img src="{{ asset('images/mje1.jpg') }}" alt="Inovasi dan Kreativitas">
                 <div class="carousel-content mb-10">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">Inovasi dan Kreativitas</h1>
-                    <p class="text-xl md:text-2xl mb-6">Temukan berbagai inovasi terbaru dari Muhammadiyah Yogyakarta</p>
+                    <p class="text-xl md:text-2xl mb-6 text-amber-600">Temukan berbagai inovasi terbaru dari Muhammadiyah Yogyakarta</p>
+                    <a href="{{ route('event.register.form') }}" class="bg-green-500 text-white-600 font-bold py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">
+                        <i class="fa-solid fa-user-plus mr-2"></i>
+                        Daftar Sekarang
+                    </a>
                 </div>
             </div>
             <div class="carousel-slide">
                 <img src="{{ asset('images/mje2.jpeg') }}" alt="Kolaborasi dan Sinergi">
                 <div class="carousel-content mb-10">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">Kolaborasi dan Sinergi</h1>
-                    <p class="text-xl md:text-2xl mb-6">Bersama membangun masa depan yang lebih baik</p>
+                    <p class="text-xl md:text-2xl mb-6 text-amber-600">Bersama membangun masa depan yang lebih baik</p>
+                    <a href="{{ route('event.register.form') }}" class="bg-green-500 text-white-600 font-bold py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">
+                        <i class="fa-solid fa-user-plus mr-2"></i>
+                        Daftar Sekarang
+                    </a>
                 </div>
             </div>
             <div class="carousel-slide">
                 <img src="{{ asset('images/mje3.jpg') }}" alt="Acara Inspiratif">
                 <div class="carousel-content mb-10">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">3 Hari Penuh Inspirasi</h1>
-                    <p class="text-xl md:text-2xl mb-6">Jangan lewatkan berbagai acara menarik selama 3 hari</p>
+                    <p class="text-xl md:text-2xl mb-6 text-amber-600">Jangan lewatkan berbagai acara menarik selama 3 hari</p>
+                   <a href="{{ route('event.register.form') }}" class="bg-green-500 text-white-600 font-bold py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">
+                        <i class="fa-solid fa-user-plus mr-2"></i>
+                        Daftar Sekarang
+                    </a>
                 </div>
             </div>
 
             <div class="carousel-control prev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></div>
             <div class="carousel-control next" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></div>
-            <div class="carousel-nav mb-20"></div>
+            <div class="carousel-nav mb-10"></div>
         </section>
 
         <section class="schedule-section" id="schedule">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-white p-8 md:p-10 rounded-3xl shadow-xl animate-on-scroll">
+                <div class="bg-blue p-8 md:p-10 rounded-3xl shadow-xl animate-on-scroll">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-8">
                         <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 md:mb-0">Jadwal Acara</h2>
                         <span class="bg-gradient-to-r from-sky-100 to-blue-100 text-sky-700 font-semibold px-6 py-3 rounded-xl border border-sky-200">3 Hari Event</span>
@@ -581,6 +558,8 @@
                 </div>
             </div>
         </section>
+
+        
     </main>
 
     <footer class="bg-gradient-to-b from-gray-900 to-slate-800 text-gray-300 mt-16 relative overflow-hidden">

@@ -47,31 +47,31 @@
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm">Peringkat Kategori</p>
-                        <p class="text-2xl font-bold text-gray-800">#{{ $categoryRank }}</p>
-                        <p class="text-xs text-gray-500">dari {{ $totalInCategory }} tenan</p>
-                    </div>
-                    <div class="bg-purple-100 p-3 rounded-full">
-                        <i class="fa-solid fa-trophy text-purple-600 text-xl"></i>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="bg-white p-6 rounded-xl shadow-sm border">-->
+            <!--    <div class="flex items-center justify-between">-->
+            <!--        <div>-->
+            <!--            <p class="text-gray-500 text-sm">Peringkat Kategori</p>-->
+            <!--            <p class="text-2xl font-bold text-gray-800">#{{ $categoryRank }}</p>-->
+            <!--            <p class="text-xs text-gray-500">dari {{ $totalInCategory }} tenan</p>-->
+            <!--        </div>-->
+            <!--        <div class="bg-purple-100 p-3 rounded-full">-->
+            <!--            <i class="fa-solid fa-trophy text-purple-600 text-xl"></i>-->
+            <!--        </div>-->
+            <!--    </div>-->
+            <!--</div>-->
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm">Peringkat Umum</p>
-                        <p class="text-2xl font-bold text-gray-800">#{{ $overallRank }}</p>
-                        <p class="text-xs text-gray-500">dari {{ $totalAllTenants }} tenan</p>
-                    </div>
-                    <div class="bg-yellow-100 p-3 rounded-full">
-                        <i class="fa-solid fa-medal text-yellow-600 text-xl"></i>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="bg-white p-6 rounded-xl shadow-sm border">-->
+            <!--    <div class="flex items-center justify-between">-->
+            <!--        <div>-->
+            <!--            <p class="text-gray-500 text-sm">Peringkat Umum</p>-->
+            <!--            <p class="text-2xl font-bold text-gray-800">#{{ $overallRank }}</p>-->
+            <!--            <p class="text-xs text-gray-500">dari {{ $totalAllTenants }} tenan</p>-->
+            <!--        </div>-->
+            <!--        <div class="bg-yellow-100 p-3 rounded-full">-->
+            <!--            <i class="fa-solid fa-medal text-yellow-600 text-xl"></i>-->
+            <!--        </div>-->
+            <!--    </div>-->
+            <!--</div>-->
 
             <div class="bg-white p-6 rounded-xl shadow-sm border">
                 <div class="flex items-center justify-between">

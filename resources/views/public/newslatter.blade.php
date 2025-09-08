@@ -4,7 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cek Undian - Muhammadiyah Jogja Expo 2025</title>
+    <title>Berita - Muhammadiyah Jogja Expo 2025</title>
+    
+    
+    <link rel="icon" href="{{ asset('mjelogo.png') }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
@@ -267,8 +270,8 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <header class="flex justify-between items-center py-6 relative z-10">
             <div class="flex items-center space-x-3">
-                <div class="bg-sky-500 p-3 rounded-xl shadow-lg">
-                    <i class="fa-solid fa-calendar-days text-white text-lg"></i>
+                <div class="p-3 rounded-xl shadow-md">
+                    <img src="{{ asset('mjelogo.png') }}" alt="MJELogo" class="w-6 h-6 object-contain">
                 </div>
                 <a href="{{ route('home') }}" class="font-bold text-xl">
                     <span class="logo-text">Muhammadiyah</span><br>

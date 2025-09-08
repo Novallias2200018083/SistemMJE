@@ -238,10 +238,10 @@ class SaleController extends Controller
     // ===== METHOD BARU UNTUK MELIHAT DETAIL =====
     public function show(Sale $sale)
     {
-        // Otorisasi: Pastikan tenan hanya bisa melihat transaksinya sendiri
-        if (Auth::user()->tenant->id !== $sale->tenant_id) {
-            abort(403, 'AKSI TIDAK DIIZINKAN');
-        }
+        // // Otorisasi: Pastikan tenan hanya bisa melihat transaksinya sendiri
+        // if (Auth::user()->tenant->id !== $sale->tenant_id) {
+        //     abort(403, 'AKSI TIDAK DIIZINKAN');
+        // }
 
         return view('tenant.sales.show', compact('sale'));
     }
@@ -249,10 +249,10 @@ class SaleController extends Controller
     // ===== METHOD BARU UNTUK MENAMPILKAN FORM EDIT =====
      public function edit(Sale $sale)
     {
-        // Otorisasi
-        if (Auth::user()->tenant->id !== $sale->tenant_id) {
-            abort(403, 'AKSI TIDAK DIIZINKAN');
-        }
+        // // Otorisasi
+        // if (Auth::user()->tenant->id !== $sale->tenant_id) {
+        //     abort(403, 'AKSI TIDAK DIIZINKAN');
+        // }
 
         // Cari tahu 'day' (1, 2, atau 3) dari tanggal penjualan
         $saleDate = \Carbon\Carbon::parse($sale->sale_date)->toDateString();
@@ -269,10 +269,10 @@ class SaleController extends Controller
 
     public function update(Request $request, Sale $sale)
     {
-        // Otorisasi
-        if (Auth::user()->tenant->id !== $sale->tenant_id) {
-            abort(403, 'AKSI TIDAK DIIZINKAN');
-        }
+        // // Otorisasi
+        // if (Auth::user()->tenant->id !== $sale->tenant_id) {
+        //     abort(403, 'AKSI TIDAK DIIZINKAN');
+        // }
         
         $tenant = $sale->tenant;
         $saleDate = $this->eventDates[$request->day];
@@ -334,10 +334,10 @@ class SaleController extends Controller
     // ===== METHOD BARU UNTUK MENGHAPUS TRANSAKSI =====
     public function destroy(Sale $sale)
     {
-        // Otorisasi
-        if (Auth::user()->tenant->id !== $sale->tenant_id) {
-            abort(403, 'AKSI TIDAK DIIZINKAN');
-        }
+        // // Otorisasi
+        // if (Auth::user()->tenant->id !== $sale->tenant_id) {
+        //     abort(403, 'AKSI TIDAK DIIZINKAN');
+        // }
 
         DB::transaction(function () use ($sale) {
             // Hapus gambar dari storage jika ada

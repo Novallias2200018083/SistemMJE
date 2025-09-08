@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
 
     if (! $this->app->runningInConsole()) {
-            Config::set('database.connections.mysql.database', 'sistemmjediy');
+            Config::set('database.connections.mysql.database', env('DB_DATABASE', 'muhr9551_sistemmjediy'));
             DB::purge('mysql');
     }
     
