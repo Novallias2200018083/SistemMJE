@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Muhammadiyah Jogja Expo 2025</title>
 
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet" />
@@ -30,17 +29,22 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgb(18, 36, 74);
-            background: linear-gradient(90deg, rgba(18, 36, 74,
+            background: rgba(255, 255, 255, 0.8);
             opacity: 80%
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease-in-out;
+            /* Properti CSS yang benar untuk teks putih dan tebal */
+            color: white;
+            font-weight: bold;
         }
 
         .fixed-header.scrolled {
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            /* Properti CSS yang benar untuk teks putih dan tebal */
+            color: black;
+            font-weight: bold;
         }
 
         .fixed-header .container {
@@ -160,49 +164,8 @@
         section {
             padding: 80px 0;
         }
-        .sponsors-section {
-            background: white;
-        }
+    
 
-        .sponsors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            align-items: center;
-            justify-items: center;
-        }
-
-        .sponsor-item {
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 120px;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .sponsor-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .sponsor-item img {
-            max-width: 100%;
-            max-height: 80px;
-            object-fit: contain;
-            filter: grayscale(100%);
-            opacity: 0.7;
-            transition: all 0.3s ease;
-        }
-
-        .sponsor-item:hover img {
-             filter: grayscale(0%);
-             opacity: 1;
-        }
-        
         .schedule-section {
             background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
         }
@@ -423,8 +386,8 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-sky-500 p-3 rounded-xl shadow-lg floating-animation">
-                        <i class="fa-solid fa-calendar-days text-white text-lg"></i>
+                    <div class="p-3 rounded-xl shadow-lg floating-animation">
+                        <img src="{{ asset('mjelogo.png') }}" alt="MJELogo" class="w-6 h-6 object-contain">
                     </div>
                     <a href="{{ route('home') }}" class="font-bold text-xl">
                         <span class="logo-text text-white">Muhammadiyah</span><br>
@@ -432,7 +395,7 @@
                     </a>
                 </div>
 
-                <nav class="hidden md:flex items-center space-x-2 text-black-600 text-bold">
+                <nav class="hidden md:flex items-center space-x-2 text-bold">
                     <a href="#hero" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Beranda</a>
                     <a href="{{ route('event.register.form') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Pendaftaran</a>
                     <a href="{{ route('ticket.find') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Cetak Tiket</a>
@@ -440,12 +403,12 @@
                     <a href="{{ route('news.index') }}" class="hover:text-sky-600 font-semibold px-3 py-2 rounded-lg hover:bg-sky-50 transition-all duration-300">Portal Berita</a>
                 </nav>
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="{{ route('login') }}" class="px-6 py-3 border-2 border-sky-500 text-sky-600 rounded-xl font-semibold hover:bg-sky-500 hover:text-white transition-all duration-300">Portal Tenan</a>
+                    <a href="{{ route('login') }}" class="px-6 py-3 border-2 bg-amber-500 border-white-500 text-white-600 rounded-xl font-semibold hover:bg-green-500 hover:text-white transition-all duration-300">Portal Tenan</a>
                 </div>
 
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-white-800 hover:text-sky-600 focus:outline-none" aria-label="Open menu">
-                        <i class="fa-solid fa-bars color-white text-2xl"></i>
+                    <button id="mobile-menu-button" class="text-gray-800 hover:text-sky-600 focus:outline-none" aria-label="Open menu">
+                        <i class="fa-solid fa-bars text-2xl"></i>
                     </button>
                 </div>
             </div>
@@ -467,45 +430,55 @@
         <section class="fullscreen-carousel mt-[5.5rem]" id="hero">
             <div class="carousel-slide active">
                 <img src="{{ asset('images/logomje.jpg') }}" alt="Muhammadiyah Jogja Expo">
-                <div class="carousel-content">
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">Muhammadiyah Jogja Expo 2025</h1>
-                    <p class="text-xl md:text-2xl mb-6">Event Tahunan Terbesar Muhammadiyah Yogyakarta</p>
-                    <a href="{{ route('event.register.form') }}" class="bg-white text-sky-600 font-bold py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">
-                        <i class="fa-solid fa-user-plus mr-2"></i>
-                        Daftar Sekarang
-                    </a>
+                <div class="carousel-content mt-[10rem]">
+                    <!--<a href="{{ route('event.register.form') }}" class="bg-green-500 text-white-600 font-bold text-center py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">-->
+                    <!--    <i class="fa-solid fa-user-plus mr-2"></i>-->
+                    <!--    Daftar Sekarang-->
+                    <!--</a>-->
                 </div>
             </div>
             <div class="carousel-slide">
                 <img src="{{ asset('images/mje1.jpg') }}" alt="Inovasi dan Kreativitas">
                 <div class="carousel-content mb-10">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">Inovasi dan Kreativitas</h1>
-                    <p class="text-xl md:text-2xl mb-6">Temukan berbagai inovasi terbaru dari Muhammadiyah Yogyakarta</p>
+                    <p class="text-xl md:text-2xl mb-6 text-amber-600">Temukan berbagai inovasi terbaru dari Muhammadiyah Yogyakarta</p>
+                    <a href="{{ route('event.register.form') }}" class="bg-green-500 text-white-600 font-bold py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">
+                        <i class="fa-solid fa-user-plus mr-2"></i>
+                        Daftar Sekarang
+                    </a>
                 </div>
             </div>
             <div class="carousel-slide">
                 <img src="{{ asset('images/mje2.jpeg') }}" alt="Kolaborasi dan Sinergi">
                 <div class="carousel-content mb-10">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">Kolaborasi dan Sinergi</h1>
-                    <p class="text-xl md:text-2xl mb-6">Bersama membangun masa depan yang lebih baik</p>
+                    <p class="text-xl md:text-2xl mb-6 text-amber-600">Bersama membangun masa depan yang lebih baik</p>
+                    <a href="{{ route('event.register.form') }}" class="bg-green-500 text-white-600 font-bold py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">
+                        <i class="fa-solid fa-user-plus mr-2"></i>
+                        Daftar Sekarang
+                    </a>
                 </div>
             </div>
             <div class="carousel-slide">
                 <img src="{{ asset('images/mje3.jpg') }}" alt="Acara Inspiratif">
                 <div class="carousel-content mb-10">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-10">3 Hari Penuh Inspirasi</h1>
-                    <p class="text-xl md:text-2xl mb-6">Jangan lewatkan berbagai acara menarik selama 3 hari</p>
+                    <p class="text-xl md:text-2xl mb-6 text-amber-600">Jangan lewatkan berbagai acara menarik selama 3 hari</p>
+                   <a href="{{ route('event.register.form') }}" class="bg-green-500 text-white-600 font-bold py-3 px-8 rounded-xl hover:bg-amber-50 hover:text-amber-600 transition-all duration-300 shadow-lg inline-flex items-center">
+                        <i class="fa-solid fa-user-plus mr-2"></i>
+                        Daftar Sekarang
+                    </a>
                 </div>
             </div>
 
             <div class="carousel-control prev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></div>
             <div class="carousel-control next" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></div>
-            <div class="carousel-nav mb-20"></div>
+            <div class="carousel-nav mb-10"></div>
         </section>
 
         <section class="schedule-section" id="schedule">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-white p-8 md:p-10 rounded-3xl shadow-xl animate-on-scroll">
+                <div class="bg-blue p-8 md:p-10 rounded-3xl shadow-xl animate-on-scroll">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-8">
                         <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 md:mb-0">Jadwal Acara</h2>
                         <span class="bg-gradient-to-r from-sky-100 to-blue-100 text-sky-700 font-semibold px-6 py-3 rounded-xl border border-sky-200">3 Hari Event</span>
@@ -553,8 +526,149 @@
             </div>
         </section>
 
+        <section 
+            id="join" 
+            class="relative min-h-screen flex items-center justify-center text-white" 
+            style="background-image: url('{{ asset('images/muhammadiyah-bg.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;"
+        >
+            <div class="absolute top-0 left-0 w-full h-full bg-black/60 z-0"></div>
 
-        <section class="my-16">
+            <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center z-10 animate-on-scroll">
+                <div class="max-w-3xl">
+                    <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">
+                        Jadilah Bagian Dari <br class="md:hidden">
+                        <span class="text-amber-400">Gerakan Pencerahan</span>
+                    </h2>
+                    <p class="text-lg md:text-xl text-white/90 mx-auto mb-10" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">
+                        Jangan lewatkan kesempatan untuk berpartisipasi dalam event terbesar Muhammadiyah Jogja. Daftar sekarang sebagai peserta atau jadi bagian dari pameran sebagai tenan.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+                        <a href="{{ route('event.register.form') }}" class="w-full sm:w-auto bg-amber-400 text-slate-900 font-bold py-4 px-8 rounded-xl hover:bg-amber-500 transition-all duration-300 shadow-lg flex items-center justify-center transform hover:-translate-y-1">
+                            <i class="fa-solid fa-user-plus mr-3"></i>
+                            Daftar Sekarang
+                        </a>
+
+                        <a href="{{ route('login') }}" class="w-full sm:w-auto bg-transparent border-2 border-white/80 text-white font-bold py-4 px-8 rounded-xl hover:bg-white/10 hover:border-white transition-all duration-300 flex items-center justify-center">
+                            <i class="fa-solid fa-store mr-3"></i>
+                            Jadi Tenan
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- {{-- Data Event --}}
+            <section class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 my-16">
+                <div class="stats-card border-sky-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">
+                                {{ number_format($totalAttendees, 0, ',', '.') }}
+                            </p>
+                            <p class="text-gray-600 mt-2 font-medium">Total Peserta Terdaftar</p>
+                        </div>
+                        <i class="fa-solid fa-users text-3xl sm:text-4xl text-sky-500"></i>
+                    </div>
+                </div>
+
+                <div class="stats-card border-blue-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">
+                                {{ number_format($totalAttendance, 0, ',', '.') }}
+                            </p>
+                            <p class="text-gray-600 mt-2 font-medium">Total Kehadiran</p>
+                        </div>
+                        <i class="fa-solid fa-calendar-day text-3xl sm:text-4xl text-blue-500"></i>
+                    </div>
+                </div>
+
+                <div class="stats-card border-orange-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">
+                                {{ number_format($totalSales, 0, ',', '.') }}
+                            </p>
+                            <p class="text-gray-600 mt-2 font-medium">Total Penjualan</p>
+                        </div>
+                        <i class="fa-solid fa-chart-line text-3xl sm:text-4xl text-orange-500"></i>
+                    </div>
+                </div>
+
+                <div class="stats-card border-purple-500 p-6 sm:p-8 rounded-2xl shadow-lg card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-2xl sm:text-4xl font-bold text-gray-800">3</p>
+                            <p class="text-gray-600 mt-2 font-medium">Hari Event</p>
+                        </div>
+                        <i class="fa-solid fa-award text-3xl sm:text-4xl text-purple-500"></i>
+                    </div>
+                </div>
+            </section> -->
+
+            <section class="bg-white p-10 rounded-3xl shadow-xl my-16">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-4xl font-bold text-gray-800">Jadwal Acara</h2>
+                    <span
+                        class="bg-gradient-to-r from-sky-100 to-blue-100 text-sky-700 font-semibold px-6 py-3 rounded-xl border border-sky-200">3
+                        Hari Event</span>
+                </div>
+                <div class="space-y-10">
+                    @for ($i = 1; $i <= 3; $i++)
+                        @php $eventsThisDay = $eventsByDay->get($i, collect()); @endphp
+                        <div class="schedule-day p-6 rounded-2xl">
+                            <h3 class="text-2xl font-bold text-sky-600 mb-6 flex items-center">
+                                <i class="fa-solid fa-calendar-day mr-3 text-3xl"></i>
+                                Hari {{ $i }} - Event Day {{ $i }}
+                            </h3>
+                            @forelse($eventsThisDay->take(3) as $event)
+                                <div class="event-card p-6 rounded-xl mb-4 border border-gray-200">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <p class="font-bold text-lg text-gray-800 mb-2">{{ $event->title }}</p>
+                                            <p class="text-gray-600 mb-4">{{ $event->description }}</p>
+                                            <div class="flex items-center space-x-6 text-sm text-gray-500">
+                                                <span class="flex items-center bg-white px-3 py-2 rounded-lg border">
+                                                    <i class="fa-regular fa-clock mr-2 text-sky-500"></i>
+                                                    {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }} -
+                                                    {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
+                                                </span>
+                                                <span class="flex items-center bg-white px-3 py-2 rounded-lg border">
+                                                    <i class="fa-solid fa-location-dot mr-2 text-red-500"></i>
+                                                    {{ $event->location }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="text-sm font-semibold bg-sky-500 text-white px-4 py-2 rounded-full ml-4">Hari
+                                            {{ $i }}</span>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center py-8">
+                                    <i class="fa-solid fa-calendar-xmark text-4xl text-gray-300 mb-4"></i>
+                                    <p class="text-gray-500">Jadwal untuk hari ke-{{ $i }} akan segera
+                                        diumumkan.</p>
+                                </div>
+                            @endforelse
+
+                            @if ($eventsThisDay->count() > 3)
+                                <div class="text-center mt-6">
+                                    <button
+                                        class="show-more-btn px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg"
+                                        data-day="{{ $i }}"
+                                        data-title="Rundown Lengkap Hari {{ $i }}">
+                                        Lihat Lebih Banyak <i class="fa-solid fa-chevron-down ml-2"></i>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    @endfor
+                </div>
+            </section>
+
+            {{-- Tenant Terlaris --}}
+            <section class="my-16">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Tenan Terlaris</h2>
                     <p class="text-lg sm:text-xl text-gray-600">Tenan dengan performa terbaik di expo ini</p>
@@ -607,38 +721,45 @@
                 </div>
             </section>
 
-        <section 
-            id="join" 
-            class="relative min-h-screen flex items-center justify-center text-white" 
-            style="background-image: url('{{ asset('images/muhammadiyah-bg.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;"
-        >
-            <div class="absolute top-0 left-0 w-full h-full bg-black/60 z-0"></div>
+            {{-- banner action --}}
+            <section
+                class="cta-gradient text-white px-6 py-12 sm:px-10 md:px-16 md:py-20 rounded-3xl shadow-2xl my-16 text-center relative overflow-hidden">
 
-            <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center z-10 animate-on-scroll">
-                <div class="max-w-3xl">
-                    <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">
-                        Jadilah Bagian Dari <br class="md:hidden">
-                        <span class="text-amber-400">Gerakan Pencerahan</span>
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-br from-transparent to-black opacity-20"></div>
+
+                <div class="relative z-10">
+                    <!-- Judul -->
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                        Bergabunglah dengan Event Terbesar Tahun Ini!
                     </h2>
-                    <p class="text-lg md:text-xl text-white/90 mx-auto mb-10" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">
-                        Jangan lewatkan kesempatan untuk berpartisipasi dalam event terbesar Muhammadiyah Jogja. Daftar sekarang sebagai peserta atau jadi bagian dari pameran sebagai tenan.
+
+                    <!-- Deskripsi -->
+                    <p class="text-base sm:text-lg md:text-xl opacity-90 mb-8 max-w-3xl mx-auto leading-relaxed">
+                        Daftarkan diri Anda sekarang untuk mendapatkan akses ke seluruh acara, kesempatan memenangkan
+                        doorprize menarik, dan pengalaman tak terlupakan.
                     </p>
-                    
-                    <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
-                        <a href="{{ route('event.register.form') }}" class="w-full sm:w-auto bg-amber-400 text-slate-900 font-bold py-4 px-8 rounded-xl hover:bg-amber-500 transition-all duration-300 shadow-lg flex items-center justify-center transform hover:-translate-y-1">
-                            <i class="fa-solid fa-user-plus mr-3"></i>
-                            Daftar Sekarang
+
+                    <!-- Tombol -->
+                    <div
+                        class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                        <a href="{{ route('event.register.form') }}"
+                            class="bg-amber-500 hover:bg-amber-400 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 
+                       rounded-xl transition-all duration-300 shadow-lg flex items-center text-sm sm:text-base">
+                            <i class="fa-solid fa-calendar-check mr-2 sm:mr-3"></i>
+                            Daftar Event Gratis
                         </a>
-                        <a href="{{ route('login') }}" class="w-full sm:w-auto bg-transparent border-2 border-white/80 text-white font-bold py-4 px-8 rounded-xl hover:bg-white/10 hover:border-white transition-all duration-300 flex items-center justify-center">
-                            <i class="fa-solid fa-store mr-3"></i>
-                            Jadi Tenan
+                        <a href="#"
+                            class="bg-white hover:bg-gray-100 text-gray-900 font-bold py-3 sm:py-4 px-6 sm:px-8 
+                       rounded-xl transition-all duration-300 shadow-lg flex items-center text-sm sm:text-base">
+                            <i class="fa-solid fa-download mr-2 sm:mr-3"></i>
+                            Download Tiket
+>>>>>>> 5d2c7248dd8fd8d3a7269021e06bd69e1b3774c8
                         </a>
                     </div>
                 </div>
             </div>
         </section>
-
-        
     </main>
 
     <footer class="bg-gradient-to-b from-gray-900 to-slate-800 text-gray-300 mt-16 relative overflow-hidden">
