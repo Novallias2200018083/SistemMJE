@@ -22,8 +22,16 @@ class PublicController extends Controller
         $totalAttendance = Attendance::count();
         $totalSales = Sale::sum('amount');
 
-        // --- Jadwal Acara per Hari ---
-        $eventsByDay = Event::orderBy('start_time')->get()->groupBy('day');
+
+        $events = Event::orderBy('start_time')->get();
+        $eventsByDay = $events->groupBy('day')->map(function ($dayEvents) {
+            return $dayEvents->map(function ($event) {
+
+                $event->formatted_time = Carbon::parse($event->start_time)->format('H:i') . ' - ' . Carbon::parse($event->end_time)->format('H:i');
+                return $event;
+            });
+        });
+
 
         // --- Tenan Terlaris per Kategori ---
         $topTenants = [];
